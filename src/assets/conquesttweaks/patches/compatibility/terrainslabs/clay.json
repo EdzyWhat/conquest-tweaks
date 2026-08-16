@@ -1,0 +1,30 @@
+[
+	{
+		"_comment": "Terrain Slabs grass-slab connected-texture fix (clay). Conquest's own terrainslabs/clay.json compat patch degrades BOTH texture layers of the grass-covered clay slab from the connected form its FULL clay block uses (conquest:patches/survival/blocktypes/soil/clay.json) down to bare `/*` wildcards, so the slab tops never connect: (1) the base `all` is set to `clay/{type}/*` (random alternates) instead of the full block's `tiles`+`tilesWidth: 3` (9 tiles); (2) the grass `specialSecondTexture` is set to `grasscoverage/{grasscoverage}/*` with no `tiles`/`tilesWidth`. This patch deep-merges the full-block connected form back onto Conquest's own texturesByType entry (same `@.*-(blue|fire|red)-.*` key). Two things matter here that differ from soil: (a) clay's terrainslabs blocktype uses a BLANKET `drawtype: TopSoil` (soil uses `drawtypeByType {\"*-none\":\"Json\"}`), so clay's no-grass `-none` variant ALSO renders on the TopSoil path, which does not clamp the connected-texture tile index; and (b) base-game `grasscoverage/none/` ships only 1 tile while `verysparse/` ships 16. So the overlay MUST use `tilesWidthByType` (1 for `-none`, 4 for grass) - a blanket `tilesWidth: 4` on the 1-tile none overlay produces out-of-range black/void slabs. This is exactly the idiom Conquest itself uses for its peat slab and full clay block. The base `all` is safe with a flat `tilesWidth: 3` because it is coverage-independent (9 tiles for every type, no none mismatch). On the TopSoil path a `tiles` base routes through fastBlockTextureSubidsByFace (the connected selection) rather than the HasAlternates random pick, so the base connects like the full block. References only base-game texture paths (Conquest overrides them in-place) - nothing redistributed. dependsOn conquest ensures this applies after Conquest's patch; dependsOn terrainslabs gates it. See docs/HANDOFF-terrainslabs.md.",
+		"op": "addmerge",
+		"file": "terrainslabs:blocktypes/clay.json",
+		"path": "/texturesByType",
+		"dependsOn": [ { "modid": "conquest" }, { "modid": "terrainslabs" } ],
+		"value": {
+			"@.*-(blue|fire|red)-.*": {
+				"all": {
+					"base": "game:block/soil/clay/{type}/1",
+					"tiles": [
+						{ "base": "game:block/soil/clay/{type}/*" }
+					],
+					"tilesWidth": 3
+				},
+				"specialSecondTexture": {
+					"base": "game:block/plant/grasscoverage/{grasscoverage}/1",
+					"tiles": [
+						{ "base": "game:block/plant/grasscoverage/{grasscoverage}/*" }
+					],
+					"tilesWidthByType": {
+						"*-none": 1,
+						"*": 4
+					}
+				}
+			}
+		}
+	}
+]

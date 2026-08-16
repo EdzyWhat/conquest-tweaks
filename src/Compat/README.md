@@ -18,6 +18,14 @@ applies **server-side** where blocktype JSON is resolved — which is why the wh
   Repairs VOM ore veins Conquest breaks. Handoff: [`docs/HANDOFF-vom.md`](../../docs/HANDOFF-vom.md)
   (and [`docs/HANDOFF-conquest.md`](../../docs/HANDOFF-conquest.md) — Conquest ships no VOM compat and
   could adopt this).
+- **Terrain Slabs (grass slabs)** — `../assets/conquesttweaks/patches/compatibility/terrainslabs/`
+  (`soil.json`, `clay.json`). Makes grass-covered soil/clay *slabs* connect their grassy top, by
+  correcting a data bug in Conquest's OWN `terrainslabs/{soil,clay}.json` compat files (their grass
+  `specialSecondTexture` omits `tiles`/`tilesWidth`, so the `/*` wildcard bakes as random alternates,
+  not connected tiles). We `addmerge` the tiled form onto Conquest's entries. This is the `TopSoil`
+  render path — separate from, and complementary to, the Harmony `doMesh` fix below (which handles
+  rock/gravel/sand JSON-drawtype slabs). Handoff: [`docs/HANDOFF-terrainslabs.md`](../../docs/HANDOFF-terrainslabs.md)
+  (belongs upstream in Conquest, really — see [`docs/HANDOFF-conquest.md`](../../docs/HANDOFF-conquest.md)).
 - **Juicy Ores** — *not shipped.* Conquest already ships working Juicy Ores compat (since 2026-01-15,
   v1.0.7), so a patch here would be redundant and risks conflicting with Conquest's meta-patch. See
   the note in [`docs/HANDOFF-conquest.md`](../../docs/HANDOFF-conquest.md).
@@ -32,8 +40,9 @@ The ModSystem owns one lazy `Harmony(modId)` instance, applies each fix as its o
 shipped.
 
 - **`TerrainSlabs/`** — `SlabConnectedTexturesPatch.cs`, category `terrainslabs-connected-textures`,
-  toggle `Config.EnableSlabsFix`. Makes Conquest's connected textures line up on slabs (rock/gravel/
-  sand; grass-top soil slabs are a separate render path and not covered). Handoff:
+  toggle `Config.EnableSlabsFix`. Makes Conquest's connected textures line up on rock/gravel/sand
+  slabs (the `EnumDrawType.JSON` → `doMesh` render path). Grass-top soil/clay slabs use the separate
+  `TopSoil` render path and are covered by the JSON patch above, not this Harmony fix. Handoff:
   [`docs/HANDOFF-terrainslabs.md`](../../docs/HANDOFF-terrainslabs.md).
 
 ## Registry

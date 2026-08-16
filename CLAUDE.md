@@ -36,19 +36,50 @@ logged) instead of crashing the client.
 
 ### Terrain Slabs connected-textures fix (`src/Compat/TerrainSlabs/SlabConnectedTexturesPatch.cs`)
 Category `terrainslabs-connected-textures`, target `terrainslabs`, toggle `Config.EnableSlabsFix`
-(default on). Connected/tiled textures only work on cube-drawtype blocks: `CubeTesselator.Tesselate`
-picks each face's tile via `BakedCompositeTexture.GetTiledTexturesSelector(tiles, side, x, y, z)`.
-Slabs draw as `EnumDrawType.JSON` → `JsonTesselator.doMesh`. **The per-tile alternate meshes already
-exist for JSON blocks** (`ShapeTesselatorManager.Tesselate` builds `altblockModelDatas[blockId]`,
-one mesh per tile, for any `HasTiles` block regardless of draw type) — `doMesh` just selects among
-them with `GameMath.MurmurHash3Mod(x,y,z,len)` (**random**) instead of the position selector.
-`CreateFastTextureAlternates`'s `|| DrawType==JSON` early-return only skips `FastTextureVariants`
-(unused by the JSON path), so it's irrelevant; `UpdateVariant` needs no patch (it ran per-tile at
-bake time). **The fix is ONE transpiler on `doMesh`**: redirect the FIRST `MurmurHash3Mod` result
-(NOT the second — that one's for random rotations) through `CorrectTileIndex`, which returns
-`GameMath.Mod(GetTiledTexturesSelector(bakedTiles, UP, x,y,z), array.Length)` for tiled blocks and
-the original index otherwise. One tile index per whole mesh → correct on the top face, imperfect on
-thin edge faces (accepted). Needs in-game validation (patches internal `Vintagestory.Client.NoObf`).
+(default on; `.ctc slabfix on|off`). **STATUS: confirmed no-op on Conquest 1.0.7** (A-B screenshot
+test 2026-08-16, on/off/original identical) — kept as a staged, mechanism-correct hook, NOT a
+shipping fix. Mechanism: connected/tiled textures only work on cube-drawtype blocks
+(`CubeTesselator.Tesselate` picks each face's tile via
+`BakedCompositeTexture.GetTiledTexturesSelector(tiles, side, x, y, z)`). Slabs draw as
+`EnumDrawType.JSON` → `JsonTesselator.doMesh`, which selects among the per-`HasTiles` alt-mesh array
+with `GameMath.MurmurHash3Mod(x,y,z,len)` (**random**) instead of the position selector. **The fix is
+ONE transpiler on `doMesh`**: redirect the FIRST `MurmurHash3Mod` result (NOT the second — random
+rotations) through `CorrectTileIndex`, which returns
+`GameMath.Mod(GetTiledTexturesSelector(bakedTiles, UP, x,y,z), array.Length)` for `HasTiles` blocks
+and the original index otherwise.
+**Why it's a no-op on the live stack (two independent reasons):**
+1. **Gate miss.** Conquest authors ALL rock/gravel/sand slabs (and grassless `*-none` soil) as `/*`
+   wildcard alternates → `block.HasTiles==false` → `CorrectTileIndex` early-returns → the transpiler
+   never changes their index. Their varied look is Conquest's own random alternates. The ONLY live
+   `HasTiles` JSON blocks are VOM ore veins (not slabs).
+2. **Identical-mesh caveat (untested, applies even if the gate passed).** `ShapeTesselatorManager`
+   builds each alt-mesh via `TextureSource.UpdateVariant`, which **only swaps textures with
+   `BakedVariants` (alternates) and is a NO-OP for `BakedTiles`** — so a tiles-only JSON block bakes N
+   *identical* meshes, and redirecting the index resolves to the same geometry (no connection) unless
+   the block ALSO carries alternates. So even a future tiled-JSON slab may not visibly connect via this
+   transpiler; true grassless-slab connection is an engine-level change (per-tile-distinct meshes, or
+   routing slabs through a tiles-aware tesselator). See `docs/HANDOFF-terrainslabs.md` "tiled-JSON
+   caveat". `.ctc slabfix` only writes config; the patch is applied once at load, so relog to apply.
+
+### Connected-texture selector clamp — black-void guard (`src/Compat/TiledSelectorClampPatch.cs`)
+Category `tiled-selector-clamp`, target `conquest` (hard dep ⇒ always active), toggle
+`Config.EnableTiledSelectorClamp` (default on). A one-line Harmony **postfix** on the static
+`BakedCompositeTexture.GetTiledTexturesSelector` that wraps its return: `__result =
+GameMath.Mod(__result, tiles.Length)`. Root cause it guards: the selector computes
+`index = Mod(pos+rot, tilesWidth) + tilesWidth * Mod(pos', tiles.Length / tilesWidth)`, which is only
+in range while `tilesWidth ≤ tiles.Length`. If a block declares `tilesWidth > tileCount`, rows =
+`tileCount / tilesWidth` = 0 and the column term overshoots a too-short array. The **cube** path is
+masked downstream, but the **TopSoil** path (grass soil/clay slabs + full blocks) reads
+`tiles[index]` unclamped → black voids (the clay `grasscoverage/none` = 1 tile vs `tilesWidth 4` case
+that first surfaced this). The clamp is a **no-op for correctly-authored blocks** (index already in
+range) and only ever turns a would-be void into a valid wrapped tile — so declared widths no longer
+have to be perfectly re-verified against tile counts to stay void-safe. It is documented in the
+handoffs as an **engine-level (Anego) hardening**, distinct from the pack/data fixes. It does NOT
+conflict with the `doMesh` transpiler (that path uses `MurmurHash3Mod`, then `CorrectTileIndex` does
+its own `Mod` by the mesh-array length; the postfix's `Mod` by tile-array length is consistent since
+one mesh is baked per tile). NB: guards against an out-of-range *return*; it can't prevent a
+hypothetical `Mod(x,0)` throw *inside* the method — but the observed failure is a bad index (void),
+not a crash.
 
 ## Layout — four feature groups (folder boundary = handoff boundary)
 The source is foldered so a source-mod author can read/adopt exactly their slice (mirrors the
@@ -62,14 +93,31 @@ load, `.ctc` commands, compat dispatch — holding no feature logic.
 - **Group 4 (standalone core) — `src/Core/`:** `TextureReverts.cs`, `TintVibrancy.cs`,
   `PlaceholderScanner.cs`. The mod's own features; fold into nobody.
 - **Group 3 (Terrain Slabs Harmony fix) — `src/Compat/TerrainSlabs/`:** ports to Terrain Slabs
-  unchanged (`docs/HANDOFF-terrainslabs.md`). **Coverage (in-game, Conquest 1.0.7):** rock/gravel/sand
-  slabs (JSON draw) get correct connected textures; grass-covered soil/peat/clay slabs do NOT — their
-  grassy top renders on the `TopSoil` renderpass, which the `doMesh` transpiler doesn't hook.
-- **Group 2 (ore-pack JSON compat) — `src/assets/conquesttweaks/patches/compatibility/<modid>/`:**
+  unchanged (`docs/HANDOFF-terrainslabs.md`). **Coverage (in-game, Conquest 1.0.7, VS 1.22.6):** the
+  `doMesh` transpiler is a **confirmed no-op on the current pack** — verified by an on/off/original
+  A-B screenshot test (2026-08-16): identical across all three. Conquest authors rock/gravel/sand
+  slabs (and grassless `*-none` soil) as `/*` wildcard **alternates** (`block.HasTiles==false`), and
+  `CorrectTileIndex` early-returns for any non-`HasTiles` block, so the transpiler never fires on them;
+  their varied look is **Conquest's own random alternate selection**, not this patch. The transpiler is
+  **kept (default on) as a staged, mechanism-correct hook** that fires only on a `HasTiles` tiled-JSON
+  slab (none ship today), with an untested tiled-JSON caveat (`UpdateVariant` is a no-op for tiles →
+  baked meshes may be identical, so redirecting the index may still not connect; see
+  `docs/HANDOFF-terrainslabs.md`). The grass-covered soil/clay slab **tops** render on the `TopSoil`
+  renderpass — NOT touched by the transpiler — and ARE genuinely fixed by a **JSON patch** (Group 2),
+  not Harmony. Peat slabs were already correct in Conquest; forest-floor slabs use a different overlay
+  and aren't addressed. Toggle the transpiler with `.ctc slabfix on|off` (`Config.EnableSlabsFix`).
+- **Group 2 (JSON compat patches) — `src/assets/conquesttweaks/patches/compatibility/<modid>/`:**
   mirrors Conquest's own `patches/compatibility/<modid>/` convention (`docs/HANDOFF-vom.md`,
-  `docs/HANDOFF-conquest.md`). Only `visibleoresandminerals/` ships. **Juicy Ores is intentionally
-  NOT patched:** Conquest has shipped working Juicy Ores compat since 2026-01-15 (v1.0.7) — a patch
-  here would be redundant and risk conflicting with Conquest's index-based meta-patch.
+  `docs/HANDOFF-conquest.md`). Ships `visibleoresandminerals/` (ore-vein fix) and `terrainslabs/`
+  (`soil.json`, `clay.json` — grass-slab connected-texture fix). The Terrain Slabs patches correct a
+  data bug in Conquest's OWN `terrainslabs/{soil,clay}.json` compat files: their grass-slab
+  `specialSecondTexture` omits `tiles`/`tilesWidth`, so the `/*` wildcard bakes as random alternates
+  instead of connected tiles. Our patches `addmerge` the tiled form (`tilesWidth: 4`) onto Conquest's
+  own texturesByType entries (gated `dependsOn` conquest+terrainslabs; conquest hard-dep ⇒ ours applies
+  after Conquest's). Reference-only base-game paths; nothing redistributed. **Juicy Ores is
+  intentionally NOT patched:** Conquest has shipped working Juicy Ores compat since 2026-01-15
+  (v1.0.7) — a patch here would be redundant and risk conflicting with Conquest's index-based
+  meta-patch.
 - `src/Compat/CompatFix.cs` — shared registry descriptor; `src/Compat/README.md` maps the two compat
   mechanisms.
 - `src/` also holds `Mod.csproj`, `modinfo.json`, `Config.cs`, and `assets/conquesttweaks/`:

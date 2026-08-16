@@ -121,6 +121,20 @@ public class Config
     /// Slabs. See src/Compat/TerrainSlabs/SlabConnectedTexturesPatch.cs.</summary>
     public bool EnableSlabsFix = true;
 
+    /// <summary>Connected-texture selector clamp (black-void guard). A ~one-line hardening: postfix
+    /// <c>BakedCompositeTexture.GetTiledTexturesSelector</c> so its returned tile index is wrapped
+    /// into range (<c>GameMath.Mod(index, tiles.Length)</c>). The engine's selector can return an
+    /// out-of-range index whenever a block declares <c>tilesWidth</c> greater than the number of
+    /// tiles it actually ships (then rows = tileCount / tilesWidth = 0 and the column term overshoots
+    /// a too-short array) - which the non-clamping <c>TopSoil</c> render path turns into black/void
+    /// blocks (this is what a naive clay grass-slab overlay did before we split its width byType). The
+    /// clamp is a NO-OP for correctly-authored blocks (the index is already in range) and only ever
+    /// converts a would-be void into a valid wrapped tile, so it is safe to leave on. Gated on
+    /// <c>conquest</c> (our hard dep) so it is always active in the pack context; inert without it.
+    /// This is arguably an engine-level (Anego) hardening rather than a pack fix - see the handoff
+    /// docs. Default ON. See src/Compat/TiledSelectorClampPatch.cs.</summary>
+    public bool EnableTiledSelectorClamp = true;
+
     // ---- Missing-texture / placeholder diagnostics ----
     //
     // The ore placeholder / Visible-Ores-&-Minerals repair is now done with static JSON patches

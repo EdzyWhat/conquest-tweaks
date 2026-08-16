@@ -63,6 +63,8 @@ Three ways to configure it, all applying **on relog**:
 - `.ctc vibrancy <0..1>` — set the green-saturation multiplier
 - `.ctc scan` — list blocks that resolve to the pink/black placeholder; writes a full report to
   `ModConfig/ctc-missing-textures.txt`
+- `.ctc slabfix [on|off]` — toggle the Terrain Slabs connected-texture fix (`Config.EnableSlabsFix`);
+  no arg reports the current state. Relog to apply.
 
 **2. In-game handbook** — open the Survival Handbook (`H`) → **Guides** → **Conquest VS Tweaks & Compatibility**
 for a page listing the commands, the revertable families, and the vibrancy dial.

@@ -1,0 +1,39 @@
+[
+	{
+		"_comment": "Terrain Slabs grass-slab connected-texture fix (soil). Conquest's own terrainslabs/soil.json compat patch degrades BOTH texture layers of the grass-covered soil slab from the connected form its FULL soil block (game:blocktypes/soil/soil.json) uses down to bare `/*` wildcards: (1) the grass `specialSecondTexture` is set to `grasscoverage/{grasscoverage}/*` with no `tiles`/`tilesWidth`, so it bakes as random alternates instead of connected tiles; (2) the base `all` is set to `soil/fertility/{fertility}/*` (random alternates) for EVERY fertility, whereas the full block connects some fertilities with `tiles`+`tilesWidth`. This addmerge deep-merges the connected form back onto Conquest's own texturesByType entry (same broad `@.*-(compost|high|low|verylow|medium)-.*` key). OVERLAY: a flat `tilesWidth: 4` is safe for soil because soil's blocktype uses `drawtypeByType {\"*-none\":\"Json\"}` / `renderpassByType {\"*-none\":\"Opaque\"}`, so the no-grass `-none` variant renders Json/Opaque and never draws the overlay - the 1-tile `grasscoverage/none/` overlay is never put on the non-clamping TopSoil path (unlike CLAY, whose blanket `drawtype: TopSoil` forces the `tilesWidthByType {*-none:1}` idiom to avoid black voids; see clay.json). All drawn coverages (verysparse=16, sparse=20 tiles) exceed a width-4 grid, so no overshoot. BASE - and this is the subtle part, split by RENDER PATH not just fertility: the base is visible on two different paths. Grass-covered variants (verysparse/sparse) render on the TopSoil path, whose tesselator reads BakedTiles directly (like CubeTesselator) and CAN render connected tiles - so there we want the full block's connected form. But the grassless `-none` variant renders as EnumDrawType.JSON through JsonTesselator.doMesh, which selects a whole pre-baked mesh (`sourceMesh = altblockModelDatas[blockId][index]`) and applies NO per-index UV offset. Those alternate meshes are only made visually distinct for textures with BakedVariants (a `/*` wildcard base = alternates); for a tiles-only texture (BakedTiles) ShapeTesselatorManager.Tesselate bakes N *identical* meshes (TextureSource.UpdateVariant is a no-op for tiles), so a connected `tiles` base on a `-none` slab renders UNIFORM - every slab shows the same tile, no variation. (This is exactly why medium `-none`, authored as `/*` alternates, showed proper variation while a tiled verylow `-none` slab looked like a single texture.) So on the JSON path we deliberately use ALTERNATES, not tiles. The allByType keys are therefore ordered by coverage first: `*-compost-*` / `*-medium-*` are alternates for every coverage (their textures aren't a connectable grid anyway; compost=10, medium=9 tiles); `*-none` catches the grassless high/low/verylow slabs and gives them alternates (`/*`) because the JSON path can't render tiles as variation; `*-high-*` connects grass-covered high at `tilesWidth: 4` (16 tiles = 4x4) and the final `*` connects grass-covered low/verylow at `tilesWidth: 3` (9 tiles = 3x3), both on the tiles-aware TopSoil path. First-match-wins by insertion order, so specific/`-none` keys must precede the `*-high-*` and `*` catch-alls. We use `allByType` nested inside Conquest's broad key rather than sibling keys because the byType resolver is first-match-wins and `addmerge` APPENDS keys after Conquest's broad key (which would always match first); `allByType` is structurally identical to Conquest's own confirmed-working `specialSecondTextureByType` (object-valued nested byType) and `all` is not special to the resolver (only to the tesselator, which runs later), so `allByType`->`all` is the same transform. tilesWidth matches each fertility's tile count exactly (9=3x3, 16=4x4), so no overshoot and no black-void risk; grass bases are coverage-uniform across verysparse/sparse. TRUE seamless connection on a grassless slab is NOT reachable from a JSON patch - it needs the engine to bake per-tile-distinct meshes for tiled JSON blocks (an Anego-level change; see docs/HANDOFF-terrainslabs.md 'engine-level'). Alternates is the best achievable on that path and matches the variation the full block shows. If `allByType` ever failed to resolve, Conquest's existing `all` alternates simply remain - no regression. References only base-game texture paths (Conquest overrides them in-place when present) - nothing is redistributed. dependsOn conquest ensures this applies after Conquest's patch; dependsOn terrainslabs gates it to installs that have the slab block. See docs/HANDOFF-terrainslabs.md.",
+		"op": "addmerge",
+		"file": "terrainslabs:blocktypes/soil.json",
+		"path": "/texturesByType",
+		"dependsOn": [ { "modid": "conquest" }, { "modid": "terrainslabs" } ],
+		"value": {
+			"@.*-(compost|high|low|verylow|medium)-.*": {
+				"allByType": {
+					"*-compost-*": { "base": "game:block/soil/fertility/{fertility}/*" },
+					"*-medium-*": { "base": "game:block/soil/fertility/{fertility}/*" },
+					"*-none": { "base": "game:block/soil/fertility/{fertility}/*" },
+					"*-high-*": {
+						"base": "game:block/soil/fertility/{fertility}/1",
+						"tiles": [
+							{ "base": "game:block/soil/fertility/{fertility}/*" }
+						],
+						"tilesWidth": 4
+					},
+					"*": {
+						"base": "game:block/soil/fertility/{fertility}/1",
+						"tiles": [
+							{ "base": "game:block/soil/fertility/{fertility}/*" }
+						],
+						"tilesWidth": 3
+					}
+				},
+				"specialSecondTexture": {
+					"base": "game:block/plant/grasscoverage/{grasscoverage}/1",
+					"tiles": [
+						{ "base": "game:block/plant/grasscoverage/{grasscoverage}/*" }
+					],
+					"tilesWidth": 4
+				}
+			}
+		}
+	}
+]
