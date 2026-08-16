@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <!--
-    Conquest Tweaks & Compatibility: a companion patch mod that layers on top of the Conquest VS
+    Conquest VS Tweaks & Compatibility: a companion patch mod that layers on top of the Conquest VS
     Edition texture pack and selectively restores VANILLA appearance for chosen block
     families (soil/dirt, grass top-cover, forest floor, peat, clay, cob, rammed earth, mud
     brick, stone path, tall grass, other foliage) plus a green-selective grass tint
@@ -21,8 +21,8 @@
   -->
 
   <PropertyGroup>
-    <AssemblyName>ConquestVanillaVom</AssemblyName>
-    <RootNamespace>ConquestVanillaVom</RootNamespace>
+    <AssemblyName>ConquestTweaks</AssemblyName>
+    <RootNamespace>ConquestTweaks</RootNamespace>
     <EnableDefaultCompileItems>true</EnableDefaultCompileItems>
     <!-- Assets/modinfo are packaged by build/restage.sh, not copied by the build. -->
     <EnableDefaultNoneItems>false</EnableDefaultNoneItems>

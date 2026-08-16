@@ -4,4 +4,4 @@ obj/
 
 # Bundled vanilla texture payload is regenerated from the local game install by
 # build/extract-vanilla.py; don't commit redistributed game art.
-src/assets/conquestvanillavom/textures/vanilla/
+src/assets/conquesttweaks/textures/vanilla/

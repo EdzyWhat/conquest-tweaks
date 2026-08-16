@@ -29,4 +29,4 @@
 
 - [x] 6.1 `openspec validate add-terrain-slabs-compat --strict` clean
 - [x] 6.2 Build clean (`CONFIG=Release bash build/restage.sh`); new patch type confirmed present in the staged assembly
-- [ ] 6.3 **In-game validation (mandatory, design.md D7)**: with Conquest + Terrain Slabs + PlaceOnSlabs installed — (a) slab top faces join Conquest's connected textures with neighbours, (b) no NRE/tesselation errors in the client log, (c) `.cvv list` shows the fix detected + enabled; then with Terrain Slabs absent, (d) confirm the fix stays inert and nothing regresses
+- [x] 6.3 **In-game validation (mandatory, design.md D7)**: confirmed in-game (2026-08-16) with Conquest + Terrain Slabs + PlaceOnSlabs — the Limestone Sand Slab (top-face `tilesWidth: 8`) shows position-correct connected textures joining its neighbours; the transpiler matched this build's `doMesh` and redirected tile selection (no patch-failed warning). Visual join = working

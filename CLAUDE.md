@@ -1,6 +1,6 @@
-# conquest-vanilla-vom
+# conquest-tweaks
 
-C#/.NET Vintage Story mod (modid `conquestvanillavom`, display name **"Conquest Tweaks &
+C#/.NET Vintage Story mod (modid `conquesttweaks`, display name **"Conquest VS Tweaks &
 Compatibility"**) that layers over the **Conquest VS Edition** texture pack (modid `conquest`, a hard
 dep). It's a **Conquest compatibility umbrella**: an always-on core (per-family vanilla texture
 reverts + a green-selective grass-tint vibrancy dial) plus **optional per-mod compatibility fixes
@@ -9,9 +9,9 @@ JSON patches apply server-side, but the **C# runtime is client-only** (`ShouldLo
 — all visual work is client-side. Independent of the sibling VS mods in `~/claude` — treat as its
 own project.
 
-**NB — internal identity is frozen, display name is not.** The modid `conquestvanillavom` is
-load-bearing (asset domain `assets/conquestvanillavom/`, config file `conquestvanillavom.json`, the
-`.cvv` command, the `ConquestVanillaVom` assembly/namespace, handbook `pageCode`). Only the
+**NB — internal identity is frozen, display name is not.** The modid `conquesttweaks` is
+load-bearing (asset domain `assets/conquesttweaks/`, config file `conquesttweaks.json`, the
+`.ctc` command, the `ConquestTweaks` assembly/namespace, handbook `pageCode`). Only the
 user-facing *display* name/description was re-scoped to the umbrella framing; never rename the modid
 (it would wipe every user's config and break the asset domain).
 
@@ -28,8 +28,8 @@ Only `conquest` (+`game`) are hard deps; optional target mods are **soft** and n
   `UnpatchAll(modId)` in `Dispose`. Harmony is **game-bundled** (`Lib/0Harmony.dll`) — referenced,
   never shipped.
 
-Optional fixes are declared in the `CompatFixes` registry (`ConquestVanillaVomModSystem.cs`) as
-`CompatFix` descriptors (`src/Compat/CompatFix.cs`); `.cvv list` reports each fix's target, whether
+Optional fixes are declared in the `CompatFixes` registry (`ConquestTweaksModSystem.cs`) as
+`CompatFix` descriptors (`src/Compat/CompatFix.cs`); `.ctc list` reports each fix's target, whether
 it's detected, its mechanism, and (Harmony fixes) its enabled state. `ActivateHarmonyCompat` wraps
 `PatchCategory` in try/catch so a version-drift patch failure deactivates just that fix (warning
 logged) instead of crashing the client.
@@ -51,12 +51,12 @@ the original index otherwise. One tile index per whole mesh → correct on the t
 thin edge faces (accepted). Needs in-game validation (patches internal `Vintagestory.Client.NoObf`).
 
 ## Layout
-- `src/` — `Mod.csproj`, `modinfo.json`, `Config.cs`, `ConquestVanillaVomModSystem.cs`, and
-  `assets/conquestvanillavom/`:
+- `src/` — `Mod.csproj`, `modinfo.json`, `Config.cs`, `ConquestTweaksModSystem.cs`, and
+  `assets/conquesttweaks/`:
   - `textures/vanilla/<family>/…` — bundled vanilla revert art (generated, git-ignored).
   - `patches/vom-ore-*.json` — the optional VOM ore-vein fix (JSON patches; see below).
-  - `config/handbook/00-conquestvanillavom.json` + `lang/en.json` — an in-game Survival Handbook
-    **Guides** page (`pageCode: conquestvanillavom-guide`) documenting the `.cvv` commands, the
+  - `config/handbook/00-conquesttweaks.json` + `lang/en.json` — an in-game Survival Handbook
+    **Guides** page (`pageCode: conquesttweaks-guide`) documenting the `.ctc` commands, the
     revertable families, and the vibrancy dial. Guide pages are discovered from any domain's
     `config/handbook/*.json`; `title`/`text` are domain-qualified lang keys resolved to VTML rich
     text (`<strong>`/`<br>`/`<a href="handbook://…">`). VTML passes literal `&` and non-tag text
@@ -119,7 +119,7 @@ thin edge faces (accepted). Needs in-game validation (patches internal `Vintages
     foliage *more* saturated, not less. The vibrancy dial (tint desaturation) is the correct lever;
     it only ever appeared broken because of the `AssetsFinalize`-too-late bug above.
 - **Not live:** textures + tint are baked into the atlas at load. Config/command changes apply on
-  relog. `.cvv list|set|vibrancy` edit + persist config via `StoreModConfig`.
+  relog. `.ctc list|set|vibrancy` edit + persist config via `StoreModConfig`.
 
 ## Coverage status (per extract-vanilla.py)
 Full (0 unmapped): soil, grasscover, forestfloor, peat, clay, farmland, cob, rammedearth.
@@ -137,7 +137,7 @@ dial instead. Don't invest in per-species foliage mapping unless asked.
 ## Ore/rock placeholder fix — Visible Ores & Minerals compat (JSON patches)
 Conquest's `patches/survival/blocktypes/stone/ore-{graded,ungraded,gem}.json` do
 `op:remove /textures` then rebuild via a `texturesByType`. On its own this is fine — a fresh
-`.cvv scan` of Conquest 1.0.7 (no VOM) is clean, no ore×rock gaps. The real breakage is with
+`.ctc scan` of Conquest 1.0.7 (no VOM) is clean, no ore×rock gaps. The real breakage is with
 **Visible Ores & Minerals (VOM)** installed.
 
 **Why VOM breaks (the mechanism):** VOM patches the same three ore blocktypes into 3D veins
@@ -167,7 +167,7 @@ server-side where the blocktype exists; the server resolves the veins and ships 
 The **C# ModSystem stays client-only** (`ShouldLoad(side) => side==Client`) — only the JSON asset
 patches ride the server side. (Pending in-game verification of the ore render at time of writing.)
 
-**The fix = three JSON patches** at `assets/conquestvanillavom/patches/vom-ore-{graded,ungraded,
+**The fix = three JSON patches** at `assets/conquesttweaks/patches/vom-ore-{graded,ungraded,
 gem}.json`, each a single op:
 - `op: "addmerge"`, `path: "/textures"` (the **parent**, not `/textures/cube`). `addmerge` →
   `AddMergeOperation` → `AddInsertPrepend`, which resolves the parent of `/textures` to the **block
@@ -196,8 +196,8 @@ and coexist), the result has a valid `cube` → no placeholder.
 for all 24 rocks (Conquest pack); `block/stone/ore/{type}1|2|3` overlays use no `{grade}` prefix
 (`nativecopper1` exists, `poornativecopper1` does not); all VOM lump textures resolve under `game:`.
 
-## Diagnostic scanner (`.cvv scan`, client command — NOT `/cvv`)
-`.cvv scan` (and `Config.ReportMissingTexturesOnLoad` → runs on `LevelFinalize`) walks
+## Diagnostic scanner (`.ctc scan`, client command — NOT `/ctc`)
+`.ctc scan` (and `Config.ReportMissingTexturesOnLoad` → runs on `LevelFinalize`) walks
 `capi.World.Blocks`. A block is flagged if:
 1. `block.Textures` is empty (no wiring), or
 2. any `CompositeTexture` ref (`Base` / `Alternates[].Base` / `BlendedOverlays[].Base`) points at a
@@ -214,7 +214,7 @@ for all 24 rocks (Conquest pack); `block/stone/ore/{type}1|2|3` overlays use no 
    ground truth; the scanner just surfaces the same gaps without a report.
 
 Groups by the first two dash-segments of the code, prints a summary, writes the full list to
-`ModConfig/cvv-missing-textures.txt`. **Skips any block whose code contains `multiblock`** (invisible
+`ModConfig/ctc-missing-textures.txt`. **Skips any block whose code contains `multiblock`** (invisible
 structural stand-ins, no wiring by design).
 
 **Why check #3 exists:** the old scanner only validated that referenced texture *assets* exist, so
@@ -235,7 +235,7 @@ must happen pre-atlas (in `AssetsLoaded` — same hook the reverts use; NOT `Ass
 too late on the client, see the Mechanism section) — a timing split. The tractable design: in
 `AssetsLoaded`, for each Conquest-patched blocktype, enumerate its variant combos, resolve each
 texturesByType/wildcard ref, and inject a bundled vanilla fallback ONLY for variants whose refs are
-missing. Substantial + needs per-variant resolution logic. Decision: run `.cvv scan` first to see
+missing. Substantial + needs per-variant resolution logic. Decision: run `.ctc scan` first to see
 whether anything beyond ores actually breaks before investing in B.
 
 ## Build / test loop

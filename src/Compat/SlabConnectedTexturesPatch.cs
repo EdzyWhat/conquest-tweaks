@@ -8,7 +8,7 @@ using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
 using Vintagestory.Client.NoObf;
 
-namespace ConquestVanillaVom;
+namespace ConquestTweaks;
 
 // ---------------------------------------------------------------------------------------------
 // Terrain Slabs connected-textures fix (Harmony).  Category: "terrainslabs-connected-textures".

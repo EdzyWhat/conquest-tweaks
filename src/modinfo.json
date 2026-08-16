@@ -1,7 +1,7 @@
 {
 	"type": "code",
-	"modid": "conquestvanillavom",
-	"name": "Conquest Tweaks & Compatibility",
+	"modid": "conquesttweaks",
+	"name": "Conquest VS Tweaks & Compatibility",
 	"authors": [ "nick.edises" ],
 	"description": "A Conquest VS Edition companion: reverts Conquest textures to vanilla per block family, tones down foliage green with a vibrancy dial, and applies compatibility fixes for supported mods when they're detected (e.g. repairing Visible Ores & Minerals ore veins).",
 	"version": "1.0.0",

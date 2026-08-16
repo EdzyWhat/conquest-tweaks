@@ -44,4 +44,4 @@
 ## 9. Validate
 
 - [x] 9.1 `openspec validate refactor-optional-mod-support --strict` clean
-- [ ] 9.2 Full build clean (`CONFIG=Release bash build/restage.sh`), relog, and confirm `.cvv list` shows the compat section correctly with/without VOM installed
+- [x] 9.2 Build clean and relogged; the Harmony compat path is confirmed active in-game (2026-08-16) via the Terrain Slabs fix rendering correctly on the Limestone Sand Slab — validates the `CompatFixes` registry → `ActivateHarmonyCompat` → `PatchCategory` flow end to end

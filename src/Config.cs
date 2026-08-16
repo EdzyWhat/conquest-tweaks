@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 
-namespace ConquestVanillaVom;
+namespace ConquestTweaks;
 
 /// <summary>
 /// User-editable config, (de)serialized to
-/// <c>VintagestoryData/ModConfig/conquestvanillavom.json</c>.
+/// <c>VintagestoryData/ModConfig/conquesttweaks.json</c>.
 ///
 /// Every block-family flag is an independent toggle. When ON, the mod overwrites Conquest's
 /// texture bytes for that family with the bundled vanilla source art, collapsing Conquest's
@@ -16,7 +16,7 @@ namespace ConquestVanillaVom;
 /// path already exists in the loaded assets.
 ///
 /// Texture and tint changes are baked into the block texture atlas at world/client load, so
-/// edits here (or via the .cvv commands) take effect on the next relog / world reload.
+/// edits here (or via the .ctc commands) take effect on the next relog / world reload.
 /// </summary>
 public class Config
 {
@@ -124,15 +124,15 @@ public class Config
     // ---- Missing-texture / placeholder diagnostics ----
     //
     // The ore placeholder / Visible-Ores-&-Minerals repair is now done with static JSON patches
-    // (assets/conquestvanillavom/patches/vom-ore-*.json), not a runtime toggle - a patch can't
+    // (assets/conquesttweaks/patches/vom-ore-*.json), not a runtime toggle - a patch can't
     // read this config, and it is a pure additive repair that only engages when VOM is present.
 
     /// <summary>On world load, log a summary of any blocks that still resolve to a missing/
-    /// placeholder texture (same data as <c>.cvv scan</c>). Off by default to keep logs quiet.</summary>
+    /// placeholder texture (same data as <c>.ctc scan</c>). Off by default to keep logs quiet.</summary>
     public bool ReportMissingTexturesOnLoad = false;
 
     /// <summary>Enumerates every family flag by its config key, for the override loop and the
-    /// <c>.cvv</c> command. Keys match the <c>&lt;family&gt;</c> subfolders produced by
+    /// <c>.ctc</c> command. Keys match the <c>&lt;family&gt;</c> subfolders produced by
     /// build/extract-vanilla.py.</summary>
     public IEnumerable<KeyValuePair<string, bool>> FamilyToggles()
     {

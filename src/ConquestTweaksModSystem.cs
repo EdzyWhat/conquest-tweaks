@@ -10,7 +10,7 @@ using Vintagestory.API.Common;
 using Vintagestory.API.Client;
 using Vintagestory.API.Config;
 
-namespace ConquestVanillaVom;
+namespace ConquestTweaks;
 
 /// <summary>
 /// Client-side companion to the Conquest VS Edition texture pack. (The C# runs client-only via
@@ -31,13 +31,13 @@ namespace ConquestVanillaVom;
 ///
 /// A third concern - repairing Visible Ores &amp; Minerals ore veins that Conquest breaks - is NOT
 /// done here: blocktype JSON isn't reachable from C#, so it lives in static JSON patches under
-/// assets/conquestvanillavom/patches/ (see the ore-fix note below).
+/// assets/conquesttweaks/patches/ (see the ore-fix note below).
 ///
 /// Both C# jobs bake into the atlas at load, so config / command changes take effect on relog.
 /// </summary>
-public class ConquestVanillaVomModSystem : ModSystem
+public class ConquestTweaksModSystem : ModSystem
 {
-    private const string ConfigFile = "conquestvanillavom.json";
+    private const string ConfigFile = "conquesttweaks.json";
     private const string SourcePrefix = "textures/vanilla/";   // under our own domain
 
     private ICoreAPI api = null!;
@@ -45,7 +45,7 @@ public class ConquestVanillaVomModSystem : ModSystem
     private Config config = new();
 
     // Set in StartPre from Mod.Info.ModID; used as the Harmony instance id and the log prefix base.
-    private string modId = "conquestvanillavom";
+    private string modId = "conquesttweaks";
 
     // Single Harmony instance, created lazily only when at least one C#/Harmony compat fix
     // activates (see StartClientSide). Null when no such fix is active; unpatched in Dispose.
@@ -59,7 +59,7 @@ public class ConquestVanillaVomModSystem : ModSystem
     //
     // The always-on core (reverts + vibrancy) is NOT here - only optional per-mod fixes that
     // activate when their target mod is detected. JSON-patch fixes (VOM) self-gate via the patch's
-    // own `dependsOn` and are listed only so `.cvv list` can report them; Harmony fixes carry a
+    // own `dependsOn` and are listed only so `.ctc list` can report them; Harmony fixes carry a
     // config toggle + a [HarmonyPatchCategory] name and are applied in StartClientSide when their
     // target mod is present. Add the Terrain Slabs connected-texture fix here (Mechanism = Harmony)
     // once its patch class exists.
@@ -94,7 +94,7 @@ public class ConquestVanillaVomModSystem : ModSystem
         }
         catch (Exception e)
         {
-            api.Logger.Warning("[conquestvanillavom] Could not read config, using defaults: " + e.Message);
+            api.Logger.Warning("[conquesttweaks] Could not read config, using defaults: " + e.Message);
             config = new Config();
         }
         // Write back so a fresh install gets a fully-populated, editable file.
@@ -116,7 +116,7 @@ public class ConquestVanillaVomModSystem : ModSystem
         ApplyTextureReverts(api);
         ApplyTintVibrancy(api);
         // Ore placeholder / VOM repair is done with JSON patches under
-        // assets/conquestvanillavom/patches/ (blocktype JSON is not retrievable via
+        // assets/conquesttweaks/patches/ (blocktype JSON is not retrievable via
         // api.Assets here, so a byte-edit can't touch it - see the ore-fix note below).
     }
 
@@ -127,19 +127,19 @@ public class ConquestVanillaVomModSystem : ModSystem
             capi.Event.LevelFinalize += () => ScanMissingTextures(logToConsole: false);
 
         var parsers = capi.ChatCommands.Parsers;
-        capi.ChatCommands.Create("cvv")
-            .WithDescription("Conquest Tweaks & Compatibility controls (changes apply on relog)")
+        capi.ChatCommands.Create("ctc")
+            .WithDescription("Conquest VS Tweaks & Compatibility controls (changes apply on relog)")
             .BeginSubCommand("list")
                 .WithDescription("Show which texture each surface uses (vanilla/conquest) and vibrancy settings")
                 .HandleWith(OnList)
             .EndSubCommand()
             .BeginSubCommand("set")
-                .WithDescription("Choose the texture for a surface: .cvv set <name> vanilla|conquest")
+                .WithDescription("Choose the texture for a surface: .ctc set <name> vanilla|conquest")
                 .WithArgs(parsers.Word("name"), parsers.WordRange("source", "vanilla", "conquest"))
                 .HandleWith(OnSet)
             .EndSubCommand()
             .BeginSubCommand("vibrancy")
-                .WithDescription("Green saturation multiplier 0..1 (lower = less vibrant): .cvv vibrancy <value>")
+                .WithDescription("Green saturation multiplier 0..1 (lower = less vibrant): .ctc vibrancy <value>")
                 .WithArgs(parsers.DoubleRange("value", 0, 1))
                 .HandleWith(OnVibrancy)
             .EndSubCommand()
@@ -200,7 +200,7 @@ public class ConquestVanillaVomModSystem : ModSystem
         if (enabled.Count == 0) return;
 
         int applied = 0, missing = 0;
-        var sources = api.Assets.GetMany(SourcePrefix, "conquestvanillavom");
+        var sources = api.Assets.GetMany(SourcePrefix, "conquesttweaks");
         foreach (var src in sources)
         {
             string path = src.Location.Path;                 // textures/vanilla/<family>/<rel>
@@ -221,7 +221,7 @@ public class ConquestVanillaVomModSystem : ModSystem
         }
 
         api.Logger.Notification(
-            "[conquestvanillavom] Reverted {0} Conquest textures across {1} families to vanilla ({2} paths had no live Conquest asset and were left alone).",
+            "[conquesttweaks] Reverted {0} Conquest textures across {1} families to vanilla ({2} paths had no live Conquest asset and were left alone).",
             applied, enabled.Count, missing);
     }
 
@@ -260,11 +260,11 @@ public class ConquestVanillaVomModSystem : ModSystem
             if (DesaturateGreenOne(api, new AssetLocation(domain, path))) edited++;
         }
         if (edited == 0)
-            api.Logger.Warning("[conquestvanillavom] Tint colormap {0} not found in any of [{1}]; skipping {2}.",
+            api.Logger.Warning("[conquesttweaks] Tint colormap {0} not found in any of [{1}]; skipping {2}.",
                 path, string.Join(", ", domains), label);
         else
             api.Logger.Notification(
-                "[conquestvanillavom] Desaturated green in {0} across {1} domain copy/copies (sat x{2:0.00}, bri x{3:0.00}).",
+                "[conquesttweaks] Desaturated green in {0} across {1} domain copy/copies (sat x{2:0.00}, bri x{3:0.00}).",
                 label, edited, Clamp01Plus(config.GrassGreenSaturation), Clamp01Plus(config.GrassGreenBrightness));
     }
 
@@ -281,7 +281,7 @@ public class ConquestVanillaVomModSystem : ModSystem
             bmp = SKBitmap.Decode(asset.Data);
             if (bmp == null)
             {
-                api.Logger.Warning("[conquestvanillavom] Could not decode {0}; skipping vibrancy.", loc);
+                api.Logger.Warning("[conquesttweaks] Could not decode {0}; skipping vibrancy.", loc);
                 return false;
             }
 
@@ -308,7 +308,7 @@ public class ConquestVanillaVomModSystem : ModSystem
         }
         catch (Exception e)
         {
-            api.Logger.Warning("[conquestvanillavom] Vibrancy pass on {0} failed: {1}", loc, e.Message);
+            api.Logger.Warning("[conquesttweaks] Vibrancy pass on {0} failed: {1}", loc, e.Message);
             return false;
         }
         finally
@@ -355,7 +355,7 @@ public class ConquestVanillaVomModSystem : ModSystem
     // api.Assets.TryGet at the asset-load phase (returns null in every domain - the categories the
     // asset manager exposes there don't include blocktypes), so a byte-edit like ApplyTextureReverts does
     // for textures is impossible here. The fix is instead three JSON patches under
-    // assets/conquestvanillavom/patches/vom-ore-*.json that `addmerge` onto the PARENT `/textures`
+    // assets/conquesttweaks/patches/vom-ore-*.json that `addmerge` onto the PARENT `/textures`
     // (addmerge resolves the parent to the block root, so it works even when `/textures` was removed),
     // re-adding a gap-free Conquest-rock `cube` for every ore/rock combo plus VOM's `ore1ByType` lump
     // map. Because blocktype JSON is resolved SERVER-side (the client just receives resolved blocks
@@ -369,7 +369,7 @@ public class ConquestVanillaVomModSystem : ModSystem
 
     /// <summary>Walk the loaded block registry for blocks that resolve to a missing / placeholder
     /// texture (Conquest leaving a variant un-wired). Groups the offenders, prints a summary to
-    /// chat/console, and writes the full list to ModConfig/cvv-missing-textures.txt.</summary>
+    /// chat/console, and writes the full list to ModConfig/ctc-missing-textures.txt.</summary>
     private (int scanned, int broken, string reportPath) ScanMissingTextures(bool logToConsole)
     {
         var groups = new Dictionary<string, List<string>>();
@@ -412,7 +412,7 @@ public class ConquestVanillaVomModSystem : ModSystem
 
         // Build report.
         var sb = new StringBuilder();
-        sb.AppendLine($"Conquest Tweaks & Compatibility - missing/placeholder texture scan");
+        sb.AppendLine($"Conquest VS Tweaks & Compatibility - missing/placeholder texture scan");
         sb.AppendLine($"scanned {scanned} blocks, {broken} resolve to the placeholder, {groups.Count} groups");
         sb.AppendLine();
         foreach (var g in groups.OrderByDescending(g => g.Value.Count))
@@ -422,7 +422,7 @@ public class ConquestVanillaVomModSystem : ModSystem
             sb.AppendLine();
         }
 
-        string reportPath = Path.Combine(GamePaths.DataPath, "ModConfig", "cvv-missing-textures.txt");
+        string reportPath = Path.Combine(GamePaths.DataPath, "ModConfig", "ctc-missing-textures.txt");
         try
         {
             Directory.CreateDirectory(Path.GetDirectoryName(reportPath)!);
@@ -430,12 +430,12 @@ public class ConquestVanillaVomModSystem : ModSystem
         }
         catch (Exception e)
         {
-            api.Logger.Warning("[conquestvanillavom] Could not write scan report: {0}", e.Message);
+            api.Logger.Warning("[conquesttweaks] Could not write scan report: {0}", e.Message);
             reportPath = "(could not write report)";
         }
 
         if (logToConsole)
-            api.Logger.Notification("[conquestvanillavom] Placeholder scan: {0}/{1} blocks broken across {2} groups. Report: {3}",
+            api.Logger.Notification("[conquesttweaks] Placeholder scan: {0}/{1} blocks broken across {2} groups. Report: {3}",
                 broken, scanned, groups.Count, reportPath);
 
         return (scanned, broken, reportPath);
@@ -551,7 +551,7 @@ public class ConquestVanillaVomModSystem : ModSystem
     private TextCommandResult OnList(TextCommandCallingArgs args)
     {
         var sb = new System.Text.StringBuilder();
-        sb.AppendLine("Conquest Tweaks & Compatibility - texture per surface (relog to apply):");
+        sb.AppendLine("Conquest VS Tweaks & Compatibility - texture per surface (relog to apply):");
         foreach (var t in config.FamilyToggles())
             sb.AppendLine($"  {t.Key,-13} {(t.Value ? "vanilla" : "conquest")}");
         sb.AppendLine($"Grass vibrancy: {(config.GrassVibrancy ? "on" : "off")}  " +
@@ -575,7 +575,7 @@ public class ConquestVanillaVomModSystem : ModSystem
         string name = ((string)args[0]).ToLowerInvariant();
         bool useVanilla = (string)args[1] == "vanilla";
         if (!config.SetFamily(name, useVanilla))
-            return TextCommandResult.Error($"Unknown surface '{name}'. Use .cvv list to see valid names.");
+            return TextCommandResult.Error($"Unknown surface '{name}'. Use .ctc list to see valid names.");
         api.StoreModConfig(config, ConfigFile);
         return TextCommandResult.Success($"{name} → {(useVanilla ? "vanilla" : "conquest")} (relog to apply).");
     }

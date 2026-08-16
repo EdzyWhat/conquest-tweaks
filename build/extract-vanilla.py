@@ -5,7 +5,7 @@ Dev tool. Regenerates the bundled vanilla-texture payload the mod ships.
 For every texture Conquest overrides in a given block family, we find the matching VANILLA
 source texture in the installed game and copy it into
 
-    src/assets/conquestvanillavom/textures/vanilla/<family>/<conquest-relative-path>
+    src/assets/conquesttweaks/textures/vanilla/<family>/<conquest-relative-path>
 
 At runtime the mod overwrites  game:textures/<conquest-relative-path>  with these bytes for
 each enabled family - so filling a Conquest path with its vanilla source art reverts that
@@ -150,7 +150,7 @@ def main():
     args = ap.parse_args()
 
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    out_base = os.path.join(root, "src", "assets", "conquestvanillavom",
+    out_base = os.path.join(root, "src", "assets", "conquesttweaks",
                             "textures", "vanilla")
     if os.path.isdir(out_base):
         shutil.rmtree(out_base)

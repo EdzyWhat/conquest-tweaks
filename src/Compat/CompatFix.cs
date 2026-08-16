@@ -1,7 +1,7 @@
 using System;
 using Vintagestory.API.Client;
 
-namespace ConquestVanillaVom;
+namespace ConquestTweaks;
 
 /// <summary>How an optional-mod compatibility fix is delivered.</summary>
 public enum CompatMechanism
@@ -25,13 +25,13 @@ public enum CompatMechanism
 /// mod is present are registered here.
 ///
 /// A <see cref="JsonPatch"/> fix is informational only (the patch itself self-gates via
-/// <c>dependsOn</c>); it appears here so <c>.cvv list</c> can report it. A <see cref="Harmony"/>
+/// <c>dependsOn</c>); it appears here so <c>.ctc list</c> can report it. A <see cref="Harmony"/>
 /// fix carries the config gate (<see cref="ConfigEnabled"/>) and the Harmony patch category the
 /// ModSystem applies when the fix activates.
 /// </summary>
 public sealed class CompatFix
 {
-    /// <summary>Human-readable name shown in <c>.cvv list</c> and startup logs.</summary>
+    /// <summary>Human-readable name shown in <c>.ctc list</c> and startup logs.</summary>
     public required string DisplayName { get; init; }
 
     /// <summary>The modid this fix targets, checked with <c>api.ModLoader.IsModEnabled</c>.</summary>

@@ -1,4 +1,4 @@
-# Conquest Tweaks & Compatibility
+# Conquest VS Tweaks & Compatibility
 
 A companion mod for the [Conquest VS Edition](https://mods.vintagestory.at/conquest) texture pack —
 an umbrella for tuning the Conquest look and smoothing it over alongside other mods. It bundles:
@@ -26,7 +26,7 @@ server too; in single-player everything works out of the box. The mod is not req
 Ground/dirt reverted to **vanilla** by default: `soil`, `grasscover` (the grass-block top-cover),
 `forestfloor`, `clay`, `farmland`, `stonepath` (path + its slab/stair variants).
 
-Kept on **Conquest** by default (earthy building materials — switch with `.cvv set <name> vanilla`):
+Kept on **Conquest** by default (earthy building materials — switch with `.ctc set <name> vanilla`):
 `peat`, `cob`, `rammedearth`, `mudbrick`.
 
 Foliage (default **conquest**): `tallgrass`, `otherfoliage` (ferns/flowers/herbs/reeds/bamboo/…).
@@ -53,16 +53,16 @@ Three ways to configure it, all applying **on relog**:
 
 **1. In-game commands** (chat — note the leading period, it's a client command):
 
-- `.cvv list` — show which texture each surface uses (vanilla/conquest) and the vibrancy settings
-- `.cvv set <name> vanilla|conquest` — pick the texture for a surface, e.g. `.cvv set stonepath conquest`
-- `.cvv vibrancy <0..1>` — set the green-saturation multiplier
-- `.cvv scan` — list blocks that resolve to the pink/black placeholder; writes a full report to
-  `ModConfig/cvv-missing-textures.txt`
+- `.ctc list` — show which texture each surface uses (vanilla/conquest) and the vibrancy settings
+- `.ctc set <name> vanilla|conquest` — pick the texture for a surface, e.g. `.ctc set stonepath conquest`
+- `.ctc vibrancy <0..1>` — set the green-saturation multiplier
+- `.ctc scan` — list blocks that resolve to the pink/black placeholder; writes a full report to
+  `ModConfig/ctc-missing-textures.txt`
 
-**2. In-game handbook** — open the Survival Handbook (`H`) → **Guides** → **Conquest Tweaks & Compatibility**
+**2. In-game handbook** — open the Survival Handbook (`H`) → **Guides** → **Conquest VS Tweaks & Compatibility**
 for a page listing the commands, the revertable families, and the vibrancy dial.
 
-**3. Config file** — auto-created at `VintagestoryData/ModConfig/conquestvanillavom.json`. Holds
+**3. Config file** — auto-created at `VintagestoryData/ModConfig/conquesttweaks.json`. Holds
 everything the commands set, plus advanced knobs with no command: `GrassGreenBrightness`, the green
 hue band (`GreenHueCenter`/`GreenHueRange`/`GreenHueFalloff`), `SeasonGrassTintOnly`, and
 `ReportMissingTexturesOnLoad`.
@@ -94,9 +94,9 @@ surrounding-stone texture using **Conquest rock art** across *every* ore/rock co
 gem lump textures. The patches only activate when VOM is present, and apply after Conquest, so
 nothing changes if you don't run VOM. No configuration needed.
 
-Run **`.cvv scan`** to list any blocks that still resolve to the placeholder (it also detects veins
+Run **`.ctc scan`** to list any blocks that still resolve to the placeholder (it also detects veins
 whose shape needs a texture code the block doesn't provide); a full report is written to
-`ModConfig/cvv-missing-textures.txt`. Without VOM, Conquest 1.0.7's own ores scan clean.
+`ModConfig/ctc-missing-textures.txt`. Without VOM, Conquest 1.0.7's own ores scan clean.
 
 ## Terrain Slabs compatibility (connected textures)
 
@@ -120,7 +120,7 @@ It activates only when `terrainslabs` is detected and is on by default; disable 
 
 ```sh
 python3 build/extract-vanilla.py   # regenerate bundled vanilla art from your local install
-build/restage.sh                   # build + copy to VintagestoryData/Mods/conquestvanillavom
+build/restage.sh                   # build + copy to VintagestoryData/Mods/conquesttweaks
 ```
 
 `VINTAGE_STORY` overrides the game path; `VS_DATA` overrides the data dir.
