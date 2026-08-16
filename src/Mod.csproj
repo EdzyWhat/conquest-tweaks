@@ -1,0 +1,55 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Conquest Vanilla Reverts + Visible Ores & Minerals Fix: a companion patch mod that layers on top of the Conquest VS
+    Edition texture pack and selectively restores VANILLA appearance for chosen block
+    families (soil/dirt, grass top-cover, forest floor, peat, clay, cob, rammed earth, mud
+    brick, stone path, tall grass, other foliage) plus a green-selective grass tint
+    "vibrancy" dial. Every family is an independent on/off toggle read from a JSON config;
+    nothing is hard-coded to run. The C# runtime is client-only (ShouldLoad gates to client);
+    the mod is packaged side=Universal only so the optional VOM ore JSON patches can apply
+    server-side.
+
+    The revert pass works purely by overwriting Conquest's texture bytes in-memory (in
+    AssetsLoaded - after the game's assets are loaded and patched, but BEFORE the block texture
+    atlas is composed) with vanilla source art we bundle under our own domain - so it never
+    fights mod load order and never touches blocktype JSON. (The only JSON patches the mod
+    ships are the optional Visible Ores & Minerals ore-vein fix under assets/.../patches/.)
+    Compile-time references are the game (VintagestoryAPI/Lib), SkiaSharp (grass tint colormap
+    edit) and Newtonsoft.Json (config + shape JSON parsing), all shipped under the install and
+    all Private=false so their DLLs are never copied into our output.
+  -->
+
+  <PropertyGroup>
+    <AssemblyName>ConquestVanillaVom</AssemblyName>
+    <RootNamespace>ConquestVanillaVom</RootNamespace>
+    <EnableDefaultCompileItems>true</EnableDefaultCompileItems>
+    <!-- Assets/modinfo are packaged by build/restage.sh, not copied by the build. -->
+    <EnableDefaultNoneItems>false</EnableDefaultNoneItems>
+    <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="VintagestoryAPI">
+      <HintPath>$(VintageStoryPath)/VintagestoryAPI.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="VintagestoryLib">
+      <HintPath>$(VintageStoryPath)/VintagestoryLib.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <!-- SkiaSharp: shipped with the game under Lib/. Used to decode/edit/re-encode the
+         grass tint PNG for the green-selective vibrancy pass. Private=false. -->
+    <Reference Include="SkiaSharp">
+      <HintPath>$(VintageStoryPath)/Lib/SkiaSharp.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <!-- Newtonsoft.Json: the game bundles it; used for config (de)serialization via the
+         ICoreAPI Load/StoreModConfig helpers. Private=false. -->
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>$(VintageStoryPath)/Lib/Newtonsoft.Json.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+</Project>

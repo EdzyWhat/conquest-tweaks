@@ -1,0 +1,98 @@
+# Conquest Vanilla Reverts + Visible Ores & Minerals Fix
+
+A companion mod for the [Conquest VS Edition](https://mods.vintagestory.at/conquest) texture pack.
+It selectively restores **vanilla** appearance for the block families you find too
+vibrant/cartoonish, and gives you a **green-selective grass-tint vibrancy dial** — all through an
+in-game config with independent toggles.
+
+Requires the `conquest` mod (and `game`). It does nothing on its own.
+
+The visual tweaks (texture reverts + vibrancy) are **client-side** — install it on just your client
+and they work on any server. The optional Visible Ores & Minerals fix (below) is the one part that
+patches server-side data, so in **multiplayer** it only takes effect if the mod is installed on the
+server too; in single-player everything works out of the box. The mod is not required on the server
+(`requiredOnServer: false`), so a client-only install is always safe.
+
+## What it can revert (each an independent toggle)
+
+Ground/dirt (default **vanilla**): `soil`, `grasscover` (the grass-block top-cover),
+`forestfloor`, `peat`, `clay`, `farmland`, `cob`, `rammedearth`, `mudbrick`, `stonepath` (path +
+its slab/stair variants).
+
+Foliage (default **conquest**): `tallgrass`, `otherfoliage` (ferns/flowers/herbs/reeds/bamboo/…).
+Conquest heavily restructured foliage, so `otherfoliage` coverage is **partial** — the grass-tint
+vibrancy dial (below) is usually the better lever for "plants are too green."
+
+## Grass/plant vibrancy (green-selective)
+
+Desaturates only the **green** part of the plant tint, leaving dry/brown/autumn tones untouched.
+`GrassGreenSaturation` is the main knob (1.0 = unchanged, ~0.6 = a natural knock-down, 0.1 = almost
+grey-green).
+
+The game tints plants by blending two colormaps — a **climate plant tint** (the dominant base) and
+a **seasonal grass tint** (overlaid on top). Because the climate tint dominates, this dial
+desaturates **both** by default; touching only the seasonal tint is nearly invisible. The climate
+tint is shared by grass, ferns, bushes, reeds **and tree leaves**, so the effect tones down all
+foliage green together — there's no colormap-only way to mute grass while leaving leaves vivid. (For
+the curious: `SeasonGrassTintOnly: true` restricts the pass to the seasonal grass tint, which
+reproduces the old near-invisible behavior.)
+
+## Config
+
+Three ways to configure it, all applying **on relog**:
+
+**1. In-game commands** (chat — note the leading period, it's a client command):
+
+- `.cvv list` — show which texture each surface uses (vanilla/conquest) and the vibrancy settings
+- `.cvv set <name> vanilla|conquest` — pick the texture for a surface, e.g. `.cvv set stonepath conquest`
+- `.cvv vibrancy <0..1>` — set the green-saturation multiplier
+- `.cvv scan` — list blocks that resolve to the pink/black placeholder; writes a full report to
+  `ModConfig/cvv-missing-textures.txt`
+
+**2. In-game handbook** — open the Survival Handbook (`H`) → **Guides** → **Conquest Vanilla Reverts + Visible Ores & Minerals Fix**
+for a page listing the commands, the revertable families, and the vibrancy dial.
+
+**3. Config file** — auto-created at `VintagestoryData/ModConfig/conquestvanillavom.json`. Holds
+everything the commands set, plus advanced knobs with no command: `GrassGreenBrightness`, the green
+hue band (`GreenHueCenter`/`GreenHueRange`/`GreenHueFalloff`), `SeasonGrassTintOnly`, and
+`ReportMissingTexturesOnLoad`.
+
+> **Changes apply on relog.** Block textures and tint are baked into the texture atlas at world
+> load, so there is no per-frame live preview — edit config / run a command, then relog.
+
+## How it works
+
+In `AssetsLoaded` (after the game's assets are loaded and patched, but before the block texture
+atlas is composed) the mod overwrites Conquest's texture **bytes** in-memory with bundled vanilla
+source art, keyed at the same path. Conquest's extra tiled variants collapse onto the single vanilla
+texture → vanilla look. The revert pass edits no blocktype JSON, so it's load-order-independent.
+(The only JSON patches the mod ships are the optional VOM ore fix below.)
+
+**It never introduces the pink/black `unknown` placeholder:** a Conquest texture is overwritten only
+when a real vanilla source was bundled for it *and* that Conquest asset actually exists in the loaded
+set.
+
+## Visible Ores & Minerals compatibility (ore placeholders)
+
+[Visible Ores & Minerals (VOM)](https://mods.vintagestory.at/visibleoresandminerals) turns the ore
+blocktypes into 3D ore veins. Its texture wiring silently fails when Conquest strips those blocks'
+textures first (a load-order clash in how JSON patches add into a removed object) — so the veins show
+the pink/black placeholder and the log fills with *"Missing mapping for texture code #cube"*.
+
+When VOM is installed, this mod repairs the veins with a small set of JSON patches: it re-adds the
+surrounding-stone texture using **Conquest rock art** across *every* ore/rock combo, plus VOM's ore/
+gem lump textures. The patches only activate when VOM is present, and apply after Conquest, so
+nothing changes if you don't run VOM. No configuration needed.
+
+Run **`.cvv scan`** to list any blocks that still resolve to the placeholder (it also detects veins
+whose shape needs a texture code the block doesn't provide); a full report is written to
+`ModConfig/cvv-missing-textures.txt`. Without VOM, Conquest 1.0.7's own ores scan clean.
+
+## Build & install (macOS)
+
+```sh
+python3 build/extract-vanilla.py   # regenerate bundled vanilla art from your local install
+build/restage.sh                   # build + copy to VintagestoryData/Mods/conquestvanillavom
+```
+
+`VINTAGE_STORY` overrides the game path; `VS_DATA` overrides the data dir.

@@ -1,0 +1,15 @@
+{
+	"type": "code",
+	"modid": "conquestvanillavom",
+	"name": "Conquest Vanilla Reverts + Visible Ores & Minerals Fix",
+	"authors": [ "nick.edises" ],
+	"description": "Restores vanilla textures over the Conquest pack per block family, and fixes Visible Ores & Minerals ore-vein placeholders.",
+	"version": "1.0.0",
+	"side": "Universal",
+	"requiredOnClient": true,
+	"requiredOnServer": false,
+	"dependencies": {
+		"game": "",
+		"conquest": ""
+	}
+}

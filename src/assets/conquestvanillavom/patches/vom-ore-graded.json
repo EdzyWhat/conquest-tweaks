@@ -1,0 +1,25 @@
+[
+	{
+		"_comment": "VOM compat. Conquest's `op:remove /textures` strips these ore blocktypes, so VOM's own `op:add /textures/cube|ore1ByType` silently fails -> its 3D vein shapes have no #cube/#ore1 mapping and render the pink/black placeholder. We `addmerge` onto the PARENT /textures (which resolves to the block root and so works even when /textures was removed), re-adding a gap-free `cube` for every ore/rock combo plus VOM's ore1 lump mapping. Texture refs are UNQUALIFIED = game domain (base survival/ content registers under game:, exactly as VOM references it; a `survival:` domain does not resolve at runtime). The cube base uses Conquest's own rock art (conquest/{rock}/sides/1, present for all 24 rocks) so the surrounding stone matches the pack instead of VOM's vanilla {rock}1. This mod is Universal so the patch applies SERVER-side where blocktype JSON lives (a client-only mod's patch has no target and silently misses). Gated dependsOn visibleoresandminerals; applies after Conquest's remove because this mod hard-depends on conquest (loads later).",
+		"op": "addmerge",
+		"file": "game:blocktypes/stone/ore-graded.json",
+		"path": "/textures",
+		"dependsOn": [ { "modid": "visibleoresandminerals" } ],
+		"value": {
+			"cube": {
+				"base": "block/stone/rock/conquest/{rock}/sides/1",
+				"overlays": [ "block/stone/ore/{type}1" ],
+				"alternates": [
+					{ "base": "block/stone/rock/conquest/{rock}/sides/1", "overlays": [ "block/stone/ore/{type}2" ] },
+					{ "base": "block/stone/rock/conquest/{rock}/sides/1", "overlays": [ "block/stone/ore/{type}3" ] }
+				]
+			},
+			"ore1ByType": {
+				"*-quartz_nativegold-*": { "base": "item/resource/nugget/nativegold" },
+				"*-quartz_nativesilver-*": { "base": "item/resource/nugget/nativesilver" },
+				"*-galena_nativesilver-*": { "base": "item/resource/nugget/nativesilver" },
+				"*": { "base": "item/resource/nugget/{type}" }
+			}
+		}
+	}
+]

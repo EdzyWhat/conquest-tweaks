@@ -1,0 +1,23 @@
+<Project>
+
+  <!-- Shared build settings for the Conquest Vanilla Reverts + Visible Ores & Minerals Fix mod. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <!--
+    Where the Vintage Story install lives, used to reference the game DLLs (and the
+    bundled SkiaSharp / Newtonsoft.Json libs under Lib/). Prefer the VINTAGE_STORY
+    environment variable; fall back to the default macOS install path so the project
+    builds even when the variable isn't set.
+  -->
+  <PropertyGroup>
+    <VintageStoryPath Condition="'$(VINTAGE_STORY)' != ''">$(VINTAGE_STORY)</VintageStoryPath>
+    <VintageStoryPath Condition="'$(VintageStoryPath)' == ''">/Applications/Vintage Story.app</VintageStoryPath>
+  </PropertyGroup>
+
+</Project>
