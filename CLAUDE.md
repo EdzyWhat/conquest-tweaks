@@ -1,11 +1,54 @@
 # conquest-vanilla-vom
 
-C#/.NET Vintage Story mod (modid `conquestvanillavom`) that layers over the **Conquest VS
-Edition** texture pack (modid `conquest`, a hard dep) to selectively restore vanilla appearance per
-block family, plus a green-selective grass-tint vibrancy dial. Packaged `side: Universal` so its VOM
-ore JSON patches apply server-side, but the **C# runtime is client-only** (`ShouldLoad` gates to
-client) — all visual work is client-side. Independent of the sibling VS mods in `~/claude` — treat
-as its own project.
+C#/.NET Vintage Story mod (modid `conquestvanillavom`, display name **"Conquest Tweaks &
+Compatibility"**) that layers over the **Conquest VS Edition** texture pack (modid `conquest`, a hard
+dep). It's a **Conquest compatibility umbrella**: an always-on core (per-family vanilla texture
+reverts + a green-selective grass-tint vibrancy dial) plus **optional per-mod compatibility fixes
+that activate only when their target mod is detected**. Packaged `side: Universal` so its VOM ore
+JSON patches apply server-side, but the **C# runtime is client-only** (`ShouldLoad` gates to client)
+— all visual work is client-side. Independent of the sibling VS mods in `~/claude` — treat as its
+own project.
+
+**NB — internal identity is frozen, display name is not.** The modid `conquestvanillavom` is
+load-bearing (asset domain `assets/conquestvanillavom/`, config file `conquestvanillavom.json`, the
+`.cvv` command, the `ConquestVanillaVom` assembly/namespace, handbook `pageCode`). Only the
+user-facing *display* name/description was re-scoped to the umbrella framing; never rename the modid
+(it would wipe every user's config and break the asset domain).
+
+## Compatibility model (two mechanisms)
+Only `conquest` (+`game`) are hard deps; optional target mods are **soft** and never in `modinfo.json`
+`dependencies`. Each optional fix activates only when its target mod is present, via one of:
+- **JSON-patch compat** (e.g. Visible Ores & Minerals): a patch under `assets/.../patches/` that
+  self-gates with `dependsOn: [{ modid: … }]`. No C#, no config toggle (a JSON patch can't read
+  config), and it applies server-side where blocktype JSON is resolved.
+- **C#/Harmony compat** (e.g. the Terrain Slabs connected-texture fix): a Harmony patch applied at
+  client startup, gated at runtime by `capi.ModLoader.IsModEnabled(targetModId)` **and** a `Config`
+  toggle. The ModSystem owns one `Harmony(modId)` instance created **lazily** only when a fix
+  activates, applies each fix as its own `[HarmonyPatchCategory]` via `harmony.PatchCategory(…)`, and
+  `UnpatchAll(modId)` in `Dispose`. Harmony is **game-bundled** (`Lib/0Harmony.dll`) — referenced,
+  never shipped.
+
+Optional fixes are declared in the `CompatFixes` registry (`ConquestVanillaVomModSystem.cs`) as
+`CompatFix` descriptors (`src/Compat/CompatFix.cs`); `.cvv list` reports each fix's target, whether
+it's detected, its mechanism, and (Harmony fixes) its enabled state. `ActivateHarmonyCompat` wraps
+`PatchCategory` in try/catch so a version-drift patch failure deactivates just that fix (warning
+logged) instead of crashing the client.
+
+### Terrain Slabs connected-textures fix (`src/Compat/SlabConnectedTexturesPatch.cs`)
+Category `terrainslabs-connected-textures`, target `terrainslabs`, toggle `Config.EnableSlabsFix`
+(default on). Connected/tiled textures only work on cube-drawtype blocks: `CubeTesselator.Tesselate`
+picks each face's tile via `BakedCompositeTexture.GetTiledTexturesSelector(tiles, side, x, y, z)`.
+Slabs draw as `EnumDrawType.JSON` → `JsonTesselator.doMesh`. **The per-tile alternate meshes already
+exist for JSON blocks** (`ShapeTesselatorManager.Tesselate` builds `altblockModelDatas[blockId]`,
+one mesh per tile, for any `HasTiles` block regardless of draw type) — `doMesh` just selects among
+them with `GameMath.MurmurHash3Mod(x,y,z,len)` (**random**) instead of the position selector.
+`CreateFastTextureAlternates`'s `|| DrawType==JSON` early-return only skips `FastTextureVariants`
+(unused by the JSON path), so it's irrelevant; `UpdateVariant` needs no patch (it ran per-tile at
+bake time). **The fix is ONE transpiler on `doMesh`**: redirect the FIRST `MurmurHash3Mod` result
+(NOT the second — that one's for random rotations) through `CorrectTileIndex`, which returns
+`GameMath.Mod(GetTiledTexturesSelector(bakedTiles, UP, x,y,z), array.Length)` for tiled blocks and
+the original index otherwise. One tile index per whole mesh → correct on the top face, imperfect on
+thin edge faces (accepted). Needs in-game validation (patches internal `Vintagestory.Client.NoObf`).
 
 ## Layout
 - `src/` — `Mod.csproj`, `modinfo.json`, `Config.cs`, `ConquestVanillaVomModSystem.cs`, and
@@ -83,9 +126,10 @@ Full (0 unmapped): soil, grasscover, forestfloor, peat, clay, farmland, cob, ram
 Near-full: mudbrick (1), stonepath (1), tallgrass (2 = Conquest's own typo'd filenames).
 **gravels was intentionally dropped** (2026-08, user's call — they don't want gravel reverted); it
 was the largest family (325 files) and is no longer in FAMILIES, Config, or the bundle.
-**Config defaults (2026-08, = the release config):** every ground family defaults ON/vanilla,
-including `grasscover`. Foliage (`tallgrass`, `otherfoliage`) defaults OFF/conquest. Vibrancy on,
-green sat 0.6.
+**Config defaults (2026-08, = the release config):** ground families `soil`, `grasscover`,
+`forestfloor`, `clay`, `farmland`, `stonepath` default ON/vanilla; the earthy building materials
+`peat`, `cob`, `rammedearth`, `mudbrick` default OFF/conquest. Foliage (`tallgrass`, `otherfoliage`)
+defaults OFF/conquest. Vibrancy on, green sat 0.8.
 Partial: **otherfoliage (216 unmapped)** — Conquest renamed vanilla's named fern/flower variants
 (`tall`,`short`,`center1`…) to numeric ones; no clean mapping. Defaults OFF; steer users to the tint
 dial instead. Don't invest in per-species foliage mapping unless asked.

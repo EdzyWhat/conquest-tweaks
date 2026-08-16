@@ -1,9 +1,9 @@
 {
 	"type": "code",
 	"modid": "conquestvanillavom",
-	"name": "Conquest Vanilla Reverts + Visible Ores & Minerals Fix",
+	"name": "Conquest Tweaks & Compatibility",
 	"authors": [ "nick.edises" ],
-	"description": "Restores vanilla textures over the Conquest pack per block family, and fixes Visible Ores & Minerals ore-vein placeholders.",
+	"description": "A Conquest VS Edition companion: reverts Conquest textures to vanilla per block family, tones down foliage green with a vibrancy dial, and applies compatibility fixes for supported mods when they're detected (e.g. repairing Visible Ores & Minerals ore veins).",
 	"version": "1.0.0",
 	"side": "Universal",
 	"requiredOnClient": true,

@@ -1,11 +1,19 @@
-# Conquest Vanilla Reverts + Visible Ores & Minerals Fix
+# Conquest Tweaks & Compatibility
 
-A companion mod for the [Conquest VS Edition](https://mods.vintagestory.at/conquest) texture pack.
-It selectively restores **vanilla** appearance for the block families you find too
-vibrant/cartoonish, and gives you a **green-selective grass-tint vibrancy dial** — all through an
-in-game config with independent toggles.
+A companion mod for the [Conquest VS Edition](https://mods.vintagestory.at/conquest) texture pack —
+an umbrella for tuning the Conquest look and smoothing it over alongside other mods. It bundles:
 
-Requires the `conquest` mod (and `game`). It does nothing on its own.
+- **Per-family vanilla reverts** — selectively restore the game's **original** appearance for the
+  block families you find too vibrant/cartoonish, each an independent toggle.
+- **A green-selective grass-tint vibrancy dial** — tone down foliage green without touching dry,
+  brown, or autumn tones.
+- **Optional per-mod compatibility fixes** — each activates automatically *only when its target mod
+  is detected*, so you can run this alongside whatever's in your pack and it just fixes what's there
+  to fix. Currently: the Visible Ores & Minerals ore-vein repair and the Terrain Slabs connected-
+  textures fix (both below).
+
+Requires the `conquest` mod (and `game`); the compatibility fixes have **no** hard dependency on
+their targets — they're dormant until the target mod shows up.
 
 The visual tweaks (texture reverts + vibrancy) are **client-side** — install it on just your client
 and they work on any server. The optional Visible Ores & Minerals fix (below) is the one part that
@@ -15,9 +23,11 @@ server too; in single-player everything works out of the box. The mod is not req
 
 ## What it can revert (each an independent toggle)
 
-Ground/dirt (default **vanilla**): `soil`, `grasscover` (the grass-block top-cover),
-`forestfloor`, `peat`, `clay`, `farmland`, `cob`, `rammedearth`, `mudbrick`, `stonepath` (path +
-its slab/stair variants).
+Ground/dirt reverted to **vanilla** by default: `soil`, `grasscover` (the grass-block top-cover),
+`forestfloor`, `clay`, `farmland`, `stonepath` (path + its slab/stair variants).
+
+Kept on **Conquest** by default (earthy building materials — switch with `.cvv set <name> vanilla`):
+`peat`, `cob`, `rammedearth`, `mudbrick`.
 
 Foliage (default **conquest**): `tallgrass`, `otherfoliage` (ferns/flowers/herbs/reeds/bamboo/…).
 Conquest heavily restructured foliage, so `otherfoliage` coverage is **partial** — the grass-tint
@@ -26,8 +36,8 @@ vibrancy dial (below) is usually the better lever for "plants are too green."
 ## Grass/plant vibrancy (green-selective)
 
 Desaturates only the **green** part of the plant tint, leaving dry/brown/autumn tones untouched.
-`GrassGreenSaturation` is the main knob (1.0 = unchanged, ~0.6 = a natural knock-down, 0.1 = almost
-grey-green).
+`GrassGreenSaturation` is the main knob (1.0 = unchanged, **0.8 = the default gentle knock-down**,
+~0.6 = stronger, 0.1 = almost grey-green).
 
 The game tints plants by blending two colormaps — a **climate plant tint** (the dominant base) and
 a **seasonal grass tint** (overlaid on top). Because the climate tint dominates, this dial
@@ -49,7 +59,7 @@ Three ways to configure it, all applying **on relog**:
 - `.cvv scan` — list blocks that resolve to the pink/black placeholder; writes a full report to
   `ModConfig/cvv-missing-textures.txt`
 
-**2. In-game handbook** — open the Survival Handbook (`H`) → **Guides** → **Conquest Vanilla Reverts + Visible Ores & Minerals Fix**
+**2. In-game handbook** — open the Survival Handbook (`H`) → **Guides** → **Conquest Tweaks & Compatibility**
 for a page listing the commands, the revertable families, and the vibrancy dial.
 
 **3. Config file** — auto-created at `VintagestoryData/ModConfig/conquestvanillavom.json`. Holds
@@ -87,6 +97,24 @@ nothing changes if you don't run VOM. No configuration needed.
 Run **`.cvv scan`** to list any blocks that still resolve to the placeholder (it also detects veins
 whose shape needs a texture code the block doesn't provide); a full report is written to
 `ModConfig/cvv-missing-textures.txt`. Without VOM, Conquest 1.0.7's own ores scan clean.
+
+## Terrain Slabs compatibility (connected textures)
+
+[Terrain Slabs](https://mods.vintagestory.at/terrainslabs) (which requires PlaceOnSlabs) adds
+half-height slab blocks. Under Conquest, the pack's **connected textures** don't line up on slabs —
+every slab picks a *random* tile instead of the position-correct one, so slab surfaces look
+mismatched next to the full blocks they should blend with. This is an engine limitation on the JSON
+draw path slabs use (only cube-shaped blocks get position-aware tile selection), not a Conquest bug.
+
+When Terrain Slabs is installed, this mod applies a small Harmony patch that feeds slabs the same
+position-correct tile selection cube blocks already get, so Conquest's connected textures line up.
+It activates only when `terrainslabs` is detected and is on by default; disable it with
+`EnableSlabsFix: false` in the config. The connected-texture join is correct on the slab's top face
+(where it matters most); the thin edge faces may be imperfect.
+
+> This patches internal client render code, so it can only take effect on a matching game version.
+> If a game update moves the code it targets, the fix quietly deactivates (a warning is logged) and
+> the rest of the mod keeps working.
 
 ## Build & install (macOS)
 

@@ -20,7 +20,8 @@ namespace ConquestVanillaVom;
 /// </summary>
 public class Config
 {
-    // ---- Ground / dirt families (default ON: these are the "too cartoonish" surfaces) ----
+    // ---- Ground / dirt families. Most default ON (revert to vanilla); the earthy building
+    //      materials peat/cob/rammedearth/mudbrick default OFF (Conquest's look is kept). ----
 
     /// <summary>Soil &amp; the grass-block dirt body (all fertility tiers).</summary>
     public bool RevertSoil = true;
@@ -31,8 +32,8 @@ public class Config
     /// <summary>Forest floor.</summary>
     public bool RevertForestFloor = true;
 
-    /// <summary>Peat &amp; peat piles.</summary>
-    public bool RevertPeat = true;
+    /// <summary>Peat &amp; peat piles. Default OFF - keep Conquest's peat.</summary>
+    public bool RevertPeat = false;
 
     /// <summary>Clay (blue / fire / red).</summary>
     public bool RevertClay = true;
@@ -40,14 +41,14 @@ public class Config
     /// <summary>Farmland (dry/moist tiers and their sides).</summary>
     public bool RevertFarmland = true;
 
-    /// <summary>Cob.</summary>
-    public bool RevertCob = true;
+    /// <summary>Cob. Default OFF - keep Conquest's cob.</summary>
+    public bool RevertCob = false;
 
-    /// <summary>Rammed earth.</summary>
-    public bool RevertRammedEarth = true;
+    /// <summary>Rammed earth. Default OFF - keep Conquest's rammed earth.</summary>
+    public bool RevertRammedEarth = false;
 
-    /// <summary>Mud brick.</summary>
-    public bool RevertMudBrick = true;
+    /// <summary>Mud brick. Default OFF - keep Conquest's mud brick.</summary>
+    public bool RevertMudBrick = false;
 
     /// <summary>Stone path (this covers the path block plus its slab &amp; stair variants,
     /// which reuse the same textures).</summary>
@@ -81,8 +82,8 @@ public class Config
     public bool GrassVibrancy = true;
 
     /// <summary>Saturation multiplier applied to GREEN tint pixels. 1.0 = untouched (vanilla
-    /// Conquest look); lower = less vibrant. ~0.6 is a noticeable, natural knock-down.</summary>
-    public float GrassGreenSaturation = 0.6f;
+    /// Conquest look); lower = less vibrant. ~0.8 is a gentle knock-down; ~0.6 is stronger.</summary>
+    public float GrassGreenSaturation = 0.8f;
 
     /// <summary>Optional brightness (HSL lightness) multiplier on green tint pixels. 1.0 = off.
     /// Slightly below 1.0 (e.g. 0.95) tames Conquest's near-neon highlights.</summary>
@@ -105,6 +106,20 @@ public class Config
     /// only combination that produces a visible change). Setting this true reproduces the old
     /// near-invisible "season-only" behavior and is kept mainly for experimentation.</summary>
     public bool SeasonGrassTintOnly = false;
+
+    // ---- Optional-mod compatibility fixes (C#/Harmony) ----
+    //
+    // Each C#/Harmony compat fix has a toggle here. The fix is applied only when its toggle is on
+    // AND its target mod is detected at runtime (IModLoader.IsModEnabled), so leaving a toggle on
+    // is inert for anyone without the target mod. JSON-patch fixes (VOM) have NO toggle - a JSON
+    // patch can't read this config; its `dependsOn` is the gate. Applies on relog.
+
+    /// <summary>Terrain Slabs connected-textures fix. When Terrain Slabs (<c>terrainslabs</c>) is
+    /// installed alongside Conquest, this makes Conquest's connected (tiled) textures apply to slab
+    /// blocks by selecting the position-correct tile on the JSON draw path (the engine otherwise
+    /// picks a random tile variant for JSON-drawtype blocks). Default ON; inert without Terrain
+    /// Slabs. See src/Compat/SlabConnectedTexturesPatch.cs.</summary>
+    public bool EnableSlabsFix = true;
 
     // ---- Missing-texture / placeholder diagnostics ----
     //

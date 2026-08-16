@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <!--
-    Conquest Vanilla Reverts + Visible Ores & Minerals Fix: a companion patch mod that layers on top of the Conquest VS
+    Conquest Tweaks & Compatibility: a companion patch mod that layers on top of the Conquest VS
     Edition texture pack and selectively restores VANILLA appearance for chosen block
     families (soil/dirt, grass top-cover, forest floor, peat, clay, cob, rammed earth, mud
     brick, stone path, tall grass, other foliage) plus a green-selective grass tint
@@ -48,6 +48,13 @@
          ICoreAPI Load/StoreModConfig helpers. Private=false. -->
     <Reference Include="Newtonsoft.Json">
       <HintPath>$(VintageStoryPath)/Lib/Newtonsoft.Json.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <!-- 0Harmony: shipped with the game under Lib/. Used by the optional C#/Harmony
+         compatibility fixes (activated at runtime only when their target mod is detected).
+         Referenced, never shipped - bundling our own copy risks version clashes. Private=false. -->
+    <Reference Include="0Harmony">
+      <HintPath>$(VintageStoryPath)/Lib/0Harmony.dll</HintPath>
       <Private>false</Private>
     </Reference>
   </ItemGroup>

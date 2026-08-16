@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using HarmonyLib;
 using Newtonsoft.Json.Linq;
 using SkiaSharp;
 using Vintagestory.API.Common;
@@ -43,9 +44,42 @@ public class ConquestVanillaVomModSystem : ModSystem
     private ICoreClientAPI capi = null!;
     private Config config = new();
 
+    // Set in StartPre from Mod.Info.ModID; used as the Harmony instance id and the log prefix base.
+    private string modId = "conquestvanillavom";
+
+    // Single Harmony instance, created lazily only when at least one C#/Harmony compat fix
+    // activates (see StartClientSide). Null when no such fix is active; unpatched in Dispose.
+    private Harmony? harmony;
+
     // Cache of texture codes referenced by a shape (keyed by shape asset location) so the scanner
     // parses each shape file at most once.
     private readonly Dictionary<string, string[]> shapeCodeCache = new();
+
+    // ---------------------------------------------------------------- optional-mod compat registry
+    //
+    // The always-on core (reverts + vibrancy) is NOT here - only optional per-mod fixes that
+    // activate when their target mod is detected. JSON-patch fixes (VOM) self-gate via the patch's
+    // own `dependsOn` and are listed only so `.cvv list` can report them; Harmony fixes carry a
+    // config toggle + a [HarmonyPatchCategory] name and are applied in StartClientSide when their
+    // target mod is present. Add the Terrain Slabs connected-texture fix here (Mechanism = Harmony)
+    // once its patch class exists.
+    private static readonly CompatFix[] CompatFixes =
+    {
+        new CompatFix
+        {
+            DisplayName = "Visible Ores & Minerals ore-vein fix",
+            TargetModId = "visibleoresandminerals",
+            Mechanism   = CompatMechanism.JsonPatch,   // gated by dependsOn in the JSON patches; no C#
+        },
+        new CompatFix
+        {
+            DisplayName     = "Terrain Slabs connected textures",
+            TargetModId     = "terrainslabs",          // hard-deps placeonslabs, so this implies both
+            Mechanism       = CompatMechanism.Harmony,
+            HarmonyCategory = "terrainslabs-connected-textures",
+            ConfigEnabled   = cfg => cfg.EnableSlabsFix,
+        },
+    };
 
     // Client-only mod.
     public override bool ShouldLoad(EnumAppSide side) => side == EnumAppSide.Client;
@@ -53,6 +87,7 @@ public class ConquestVanillaVomModSystem : ModSystem
     public override void StartPre(ICoreAPI api)
     {
         this.api = api;
+        modId = Mod.Info.ModID;
         try
         {
             config = api.LoadModConfig<Config>(ConfigFile) ?? new Config();
@@ -93,7 +128,7 @@ public class ConquestVanillaVomModSystem : ModSystem
 
         var parsers = capi.ChatCommands.Parsers;
         capi.ChatCommands.Create("cvv")
-            .WithDescription("Conquest Vanilla Reverts + VOM Fix controls (changes apply on relog)")
+            .WithDescription("Conquest Tweaks & Compatibility controls (changes apply on relog)")
             .BeginSubCommand("list")
                 .WithDescription("Show which texture each surface uses (vanilla/conquest) and vibrancy settings")
                 .HandleWith(OnList)
@@ -112,6 +147,48 @@ public class ConquestVanillaVomModSystem : ModSystem
                 .WithDescription("List blocks whose textures resolve to the pink/black placeholder, and write a full report")
                 .HandleWith(OnScan)
             .EndSubCommand();
+
+        ActivateHarmonyCompat(capi);
+    }
+
+    // ---------------------------------------------------------------- optional-mod compat activation
+
+    /// <summary>Apply each Harmony-mechanism compat fix whose config toggle is on AND whose target
+    /// mod is detected. The Harmony instance is created lazily on the first active fix, so no
+    /// Harmony object exists when nothing activates. JSON-patch fixes are skipped here - they
+    /// self-gate via their patch's <c>dependsOn</c>.</summary>
+    private void ActivateHarmonyCompat(ICoreClientAPI capi)
+    {
+        foreach (var fix in CompatFixes)
+        {
+            if (fix.Mechanism != CompatMechanism.Harmony) continue;
+            if (!fix.IsEnabledInConfig(config)) continue;
+            if (!capi.ModLoader.IsModEnabled(fix.TargetModId)) continue;
+
+            // Fail-safe: a Harmony fix targets internal engine methods that can shift between game
+            // versions. If PatchCategory can't resolve/patch its targets, log and keep the rest of
+            // the mod (reverts, vibrancy, scanner, other fixes) fully working - never crash the client.
+            try
+            {
+                harmony ??= new Harmony(modId);
+                harmony.PatchCategory(fix.HarmonyCategory);
+                capi.Logger.Notification("[{0}] compat active: {1} (target '{2}')",
+                    modId, fix.DisplayName, fix.TargetModId);
+            }
+            catch (Exception e)
+            {
+                capi.Logger.Warning("[{0}] compat '{1}' unavailable on this game version (patch failed): {2}",
+                    modId, fix.DisplayName, e.Message);
+            }
+        }
+    }
+
+    public override void Dispose()
+    {
+        // Only created if a Harmony compat fix activated; remove exactly our patches.
+        harmony?.UnpatchAll(modId);
+        harmony = null;
+        base.Dispose();
     }
 
     // ---------------------------------------------------------------- texture reverts
@@ -335,7 +412,7 @@ public class ConquestVanillaVomModSystem : ModSystem
 
         // Build report.
         var sb = new StringBuilder();
-        sb.AppendLine($"Conquest Vanilla Reverts + VOM Fix - missing/placeholder texture scan");
+        sb.AppendLine($"Conquest Tweaks & Compatibility - missing/placeholder texture scan");
         sb.AppendLine($"scanned {scanned} blocks, {broken} resolve to the placeholder, {groups.Count} groups");
         sb.AppendLine();
         foreach (var g in groups.OrderByDescending(g => g.Value.Count))
@@ -474,14 +551,23 @@ public class ConquestVanillaVomModSystem : ModSystem
     private TextCommandResult OnList(TextCommandCallingArgs args)
     {
         var sb = new System.Text.StringBuilder();
-        sb.AppendLine("Conquest Vanilla Reverts + VOM Fix - texture per surface (relog to apply):");
+        sb.AppendLine("Conquest Tweaks & Compatibility - texture per surface (relog to apply):");
         foreach (var t in config.FamilyToggles())
             sb.AppendLine($"  {t.Key,-13} {(t.Value ? "vanilla" : "conquest")}");
         sb.AppendLine($"Grass vibrancy: {(config.GrassVibrancy ? "on" : "off")}  " +
                       $"green sat x{config.GrassGreenSaturation:0.00}, bri x{config.GrassGreenBrightness:0.00}");
         sb.AppendLine($"  green band: center {config.GreenHueCenter:0}°, range ±{config.GreenHueRange:0}°, falloff {config.GreenHueFalloff:0}°");
-        sb.Append($"  targets: {(config.SeasonGrassTintOnly ? "seasonal grass tint only" : "climate plant tint + seasonal grass tint (affects all foliage green)")}");
-        return TextCommandResult.Success(sb.ToString());
+        sb.AppendLine($"  targets: {(config.SeasonGrassTintOnly ? "seasonal grass tint only" : "climate plant tint + seasonal grass tint (affects all foliage green)")}");
+
+        sb.AppendLine("Compatibility fixes (activate only when their target mod is present):");
+        foreach (var fix in CompatFixes)
+        {
+            bool detected = capi.ModLoader.IsModEnabled(fix.TargetModId);
+            string mechanism = fix.Mechanism == CompatMechanism.Harmony ? "harmony" : "json";
+            string enabled = fix.ConfigEnabled == null ? "always" : (fix.IsEnabledInConfig(config) ? "on" : "off");
+            sb.AppendLine($"  {fix.DisplayName} [{fix.TargetModId}]: {(detected ? "detected" : "not present")}, {mechanism}, enabled {enabled}");
+        }
+        return TextCommandResult.Success(sb.ToString().TrimEnd());
     }
 
     private TextCommandResult OnSet(TextCommandCallingArgs args)
