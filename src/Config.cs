@@ -118,14 +118,15 @@ public class Config
     /// installed alongside Conquest, this makes Conquest's connected (tiled) textures apply to slab
     /// blocks by selecting the position-correct tile on the JSON draw path (the engine otherwise
     /// picks a random tile variant for JSON-drawtype blocks). Default ON; inert without Terrain
-    /// Slabs. See src/Compat/SlabConnectedTexturesPatch.cs.</summary>
+    /// Slabs. See src/Compat/TerrainSlabs/SlabConnectedTexturesPatch.cs.</summary>
     public bool EnableSlabsFix = true;
 
     // ---- Missing-texture / placeholder diagnostics ----
     //
     // The ore placeholder / Visible-Ores-&-Minerals repair is now done with static JSON patches
-    // (assets/conquesttweaks/patches/vom-ore-*.json), not a runtime toggle - a patch can't
-    // read this config, and it is a pure additive repair that only engages when VOM is present.
+    // (assets/conquesttweaks/patches/compatibility/visibleoresandminerals/ore-*.json), not a runtime
+    // toggle - a patch can't read this config, and it is a pure additive repair that only engages
+    // when VOM is present.
 
     /// <summary>On world load, log a summary of any blocks that still resolve to a missing/
     /// placeholder texture (same data as <c>.ctc scan</c>). Off by default to keep logs quiet.</summary>

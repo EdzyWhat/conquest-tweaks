@@ -1,7 +1,7 @@
 # Credits & asset provenance
 
-Conquest Vanilla Reverts + Visible Ores & Minerals Fix is a compatibility/preference companion mod. It contains two kinds of
-content with **different ownership**, so they are covered separately.
+Conquest VS Tweaks & Compatibility is a compatibility/preference companion mod. It contains two kinds
+of content with **different ownership**, so they are covered separately.
 
 ## Original work (this mod) — CC0-1.0
 
@@ -10,7 +10,7 @@ The mod's own original material is released into the public domain under
 
 - the C# source (`src/*.cs`),
 - the build tooling (`build/extract-vanilla.py`, `build/restage.sh`),
-- the JSON patches (`src/assets/conquesttweaks/patches/*.json`),
+- the JSON patches (`src/assets/conquesttweaks/patches/compatibility/**/*.json`),
 - `modinfo.json` and the documentation.
 
 Do anything you like with these, no attribution required.
@@ -31,12 +31,20 @@ on request; the mod can instead extract them from the player's own install at bu
 
 ## Referenced (not redistributed) mods
 
-These are referenced by asset path only — their files are **not** included in this mod; they resolve
-from the user's own installed copies:
+These are referenced by asset path (or, for the Terrain Slabs fix, patched at runtime) — their files
+are **not** included in this mod; they resolve from the user's own installed copies. **None of these
+mods states a license; all are treated as all-rights-reserved.** We reproduce and derive none of their
+assets.
 
 - **[Conquest VS Edition](https://mods.vintagestory.at/conquest)** (modid `conquest`) by
-  CreativeRealms — the texture pack this mod is a companion to (a hard dependency). The VOM ore
-  patch references Conquest's rock textures by path.
+  CreativeRealms & Arkaik — the texture pack this mod is a companion to (a hard dependency). The VOM
+  ore patch references Conquest's rock textures by path.
 - **[Visible Ores & Minerals](https://mods.vintagestory.at/visibleoresandminerals)** (modid
   `visibleoresandminerals`) by Skyforger007 — the optional VOM ore-vein fix references its ore/gem
   lump textures by path, and replicates its texture wiring.
+- **[Terrain Slabs](https://mods.vintagestory.at/terrainslabs)** (modid `terrainslabs`, requires
+  PlaceOnSlabs) by BeloMaximka — the connected-textures fix is a Harmony patch on the game's own
+  tesselator; it copies nothing from Terrain Slabs.
+- **[Juicy Ores](https://mods.vintagestory.at/juicyores)** (modid `juicyores`) by Craluminum2413 —
+  *not patched by this mod.* Conquest ships its own Juicy Ores compat (since v1.0.7), so no fix is
+  needed here; noted only because it shares the ore-vein architecture VOM uses.

@@ -15,6 +15,11 @@ an umbrella for tuning the Conquest look and smoothing it over alongside other m
 Requires the `conquest` mod (and `game`); the compatibility fixes have **no** hard dependency on
 their targets — they're dormant until the target mod shows up.
 
+> **Source-mod authors:** each compatibility fix is written to fold back into the mod it targets. See
+> [`docs/HANDOFF-terrainslabs.md`](./docs/HANDOFF-terrainslabs.md),
+> [`docs/HANDOFF-vom.md`](./docs/HANDOFF-vom.md), and
+> [`docs/HANDOFF-conquest.md`](./docs/HANDOFF-conquest.md), plus [`CONTRIBUTING.md`](./CONTRIBUTING.md).
+
 The visual tweaks (texture reverts + vibrancy) are **client-side** — install it on just your client
 and they work on any server. The optional Visible Ores & Minerals fix (below) is the one part that
 patches server-side data, so in **multiplayer** it only takes effect if the mod is installed on the
@@ -115,6 +120,21 @@ It activates only when `terrainslabs` is detected and is on by default; disable 
 > This patches internal client render code, so it can only take effect on a matching game version.
 > If a game update moves the code it targets, the fix quietly deactivates (a warning is logged) and
 > the rest of the mod keeps working.
+
+## Project structure
+
+The mod is an umbrella of **four independent feature groups**, foldered so a source-mod author can
+read (and adopt) exactly their slice — the folder boundary *is* the fold-in boundary:
+
+| Group | Lives in | Folds into | Handoff |
+|---|---|---|---|
+| **1. Conquest base copying** | *(nothing)* | — | We copy no Conquest art. The only bundled art is base-game vanilla (group 4's payload), owned by Anego Studios — see [CREDITS.md](./CREDITS.md). |
+| **2. Ore-pack JSON compat** | `src/assets/conquesttweaks/patches/compatibility/<modid>/` | VOM / Conquest | [HANDOFF-vom](./docs/HANDOFF-vom.md), [HANDOFF-conquest](./docs/HANDOFF-conquest.md) |
+| **3. Terrain Slabs Harmony fix** | `src/Compat/TerrainSlabs/` | Terrain Slabs | [HANDOFF-terrainslabs](./docs/HANDOFF-terrainslabs.md) |
+| **4. Standalone reverts / tweaks** | `src/Core/` | nobody (the mod itself) | — |
+
+`src/ConquestTweaksModSystem.cs` is a thin orchestrator that loads config, registers the `.ctc`
+commands, and dispatches to the groups; `src/Compat/README.md` maps the two compat mechanisms.
 
 ## Build & install (macOS)
 

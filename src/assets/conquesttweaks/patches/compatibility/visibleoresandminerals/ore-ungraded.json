@@ -1,6 +1,6 @@
 [
 	{
-		"_comment": "VOM compat for the ungraded ore blocktype. See vom-ore-graded.json for the full mechanism (addmerge onto parent /textures; unqualified = game domain; Conquest rock cube base; Universal mod so it applies server-side).",
+		"_comment": "VOM compat for the ungraded ore blocktype. See ore-graded.json for the full mechanism (addmerge onto parent /textures; unqualified = game domain; Conquest rock cube base; Universal mod so it applies server-side).",
 		"op": "addmerge",
 		"file": "game:blocktypes/stone/ore-ungraded.json",
 		"path": "/textures",

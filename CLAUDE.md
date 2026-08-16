@@ -34,7 +34,7 @@ it's detected, its mechanism, and (Harmony fixes) its enabled state. `ActivateHa
 `PatchCategory` in try/catch so a version-drift patch failure deactivates just that fix (warning
 logged) instead of crashing the client.
 
-### Terrain Slabs connected-textures fix (`src/Compat/SlabConnectedTexturesPatch.cs`)
+### Terrain Slabs connected-textures fix (`src/Compat/TerrainSlabs/SlabConnectedTexturesPatch.cs`)
 Category `terrainslabs-connected-textures`, target `terrainslabs`, toggle `Config.EnableSlabsFix`
 (default on). Connected/tiled textures only work on cube-drawtype blocks: `CubeTesselator.Tesselate`
 picks each face's tile via `BakedCompositeTexture.GetTiledTexturesSelector(tiles, side, x, y, z)`.
@@ -50,11 +50,31 @@ bake time). **The fix is ONE transpiler on `doMesh`**: redirect the FIRST `Murmu
 the original index otherwise. One tile index per whole mesh → correct on the top face, imperfect on
 thin edge faces (accepted). Needs in-game validation (patches internal `Vintagestory.Client.NoObf`).
 
-## Layout
-- `src/` — `Mod.csproj`, `modinfo.json`, `Config.cs`, `ConquestTweaksModSystem.cs`, and
-  `assets/conquesttweaks/`:
+## Layout — four feature groups (folder boundary = handoff boundary)
+The source is foldered so a source-mod author can read/adopt exactly their slice (mirrors the
+`libgui-toolsmith-sharpness` handoff model; see `docs/HANDOFF-*.md`, `CONTRIBUTING.md`, and the
+per-group table in `README.md`). `ConquestTweaksModSystem.cs` is a **thin orchestrator** — config
+load, `.ctc` commands, compat dispatch — holding no feature logic.
+- **Group 1 (Conquest base copying): none.** We copy no Conquest art. The only bundled art is
+  base-game vanilla (group 4's payload), owned by Anego Studios (`CREDITS.md`). All four target mods
+  (Conquest, VOM, Terrain Slabs, Juicy Ores) state no license → treated as all-rights-reserved; we
+  reproduce/derive none of their assets.
+- **Group 4 (standalone core) — `src/Core/`:** `TextureReverts.cs`, `TintVibrancy.cs`,
+  `PlaceholderScanner.cs`. The mod's own features; fold into nobody.
+- **Group 3 (Terrain Slabs Harmony fix) — `src/Compat/TerrainSlabs/`:** ports to Terrain Slabs
+  unchanged (`docs/HANDOFF-terrainslabs.md`). **Coverage (in-game, Conquest 1.0.7):** rock/gravel/sand
+  slabs (JSON draw) get correct connected textures; grass-covered soil/peat/clay slabs do NOT — their
+  grassy top renders on the `TopSoil` renderpass, which the `doMesh` transpiler doesn't hook.
+- **Group 2 (ore-pack JSON compat) — `src/assets/conquesttweaks/patches/compatibility/<modid>/`:**
+  mirrors Conquest's own `patches/compatibility/<modid>/` convention (`docs/HANDOFF-vom.md`,
+  `docs/HANDOFF-conquest.md`). Only `visibleoresandminerals/` ships. **Juicy Ores is intentionally
+  NOT patched:** Conquest has shipped working Juicy Ores compat since 2026-01-15 (v1.0.7) — a patch
+  here would be redundant and risk conflicting with Conquest's index-based meta-patch.
+- `src/Compat/CompatFix.cs` — shared registry descriptor; `src/Compat/README.md` maps the two compat
+  mechanisms.
+- `src/` also holds `Mod.csproj`, `modinfo.json`, `Config.cs`, and `assets/conquesttweaks/`:
   - `textures/vanilla/<family>/…` — bundled vanilla revert art (generated, git-ignored).
-  - `patches/vom-ore-*.json` — the optional VOM ore-vein fix (JSON patches; see below).
+  - `patches/compatibility/visibleoresandminerals/ore-*.json` — the optional VOM ore-vein fix (see below).
   - `config/handbook/00-conquesttweaks.json` + `lang/en.json` — an in-game Survival Handbook
     **Guides** page (`pageCode: conquesttweaks-guide`) documenting the `.ctc` commands, the
     revertable families, and the vibrancy dial. Guide pages are discovered from any domain's
@@ -167,8 +187,8 @@ server-side where the blocktype exists; the server resolves the veins and ships 
 The **C# ModSystem stays client-only** (`ShouldLoad(side) => side==Client`) — only the JSON asset
 patches ride the server side. (Pending in-game verification of the ore render at time of writing.)
 
-**The fix = three JSON patches** at `assets/conquesttweaks/patches/vom-ore-{graded,ungraded,
-gem}.json`, each a single op:
+**The fix = three JSON patches** at `assets/conquesttweaks/patches/compatibility/
+visibleoresandminerals/ore-{graded,ungraded,gem}.json`, each a single op:
 - `op: "addmerge"`, `path: "/textures"` (the **parent**, not `/textures/cube`). `addmerge` →
   `AddMergeOperation` → `AddInsertPrepend`, which resolves the parent of `/textures` to the **block
   root** (always exists), so it works even when Conquest removed `/textures`: if absent it *sets*
