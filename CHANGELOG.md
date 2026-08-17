@@ -2,9 +2,15 @@
 
 All notable changes to this project. Dates are ISO (YYYY-MM-DD).
 
-## [Unreleased]
+## [1.0.0] - 2026-08-17
 
 ### Added
+- **Large wall-lantern position fix** for Conquest. Conquest's `large/wall.json` lantern shape has the
+  glass body and the wall-bracket as two independent top-level groups, so the body doesn't seat on the
+  bracket (its small wall lantern, authored with a shared parent group, is fine). Fixed with a
+  structure-only JSON patch (`patches/compatibility/conquest/lantern-large-wall.json`) that wraps both
+  in a shared `overall` group and relocates the existing nodes into it — no geometry redistributed and
+  no Conquest art shipped. Gated `dependsOn` conquest. See `docs/HANDOFF-conquest.md` §4.
 - **Grass-slab connected textures** for Terrain Slabs. Grass-covered **soil** and **clay** slabs now
   connect their grassy top like the full blocks do. Root cause was a data bug in Conquest's own
   Terrain Slabs compat patches (`terrainslabs/soil.json`, `clay.json`): their grass-slab
