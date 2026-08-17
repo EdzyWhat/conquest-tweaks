@@ -3,7 +3,7 @@
 	"modid": "conquesttweaks",
 	"name": "Conquest VS Tweaks & Compatibility",
 	"authors": [ "RaptorKhan" ],
-	"description": "Conquest VS Edition companion: vanilla reverts, foliage vibrancy dial, and mod-compatibility fixes.",
+	"description": "Conquest VS Edition companion: mod compatibility fixes and a foliage vibrancy dial.",
 	"version": "1.0.0",
 	"website": "https://github.com/EdzyWhat/conquest-tweaks",
 	"side": "Universal",

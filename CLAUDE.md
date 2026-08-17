@@ -135,8 +135,8 @@ load, `.ctc` commands, compat dispatch — holding no feature logic.
 - `build/restage.sh` — build + stage as an unpacked mod folder in `VintagestoryData/Mods/`.
 - `build/package.sh` — cut a release zip to `dist/` (git-ignored). **Two builds, one codebase:**
   `package.sh` (PUBLIC) strips `textures/vanilla/` so it redistributes **no** base-game art — the
-  portal-safe upload; `package.sh --full` bundles the payload (personal use, contains Anego art, never
-  publish; errors if the payload isn't extracted first). The SAME DLL serves both: it auto-detects the
+  portal-safe upload; `package.sh --private` bundles the payload (PERSONAL USE only, contains Anego
+  art, never publish or share; errors if the payload isn't extracted first). The SAME DLL serves both: it auto-detects the
   payload at load via `TextureReverts.PayloadPresent` (`api.Assets.GetLocations("textures/vanilla/",
   "conquesttweaks")`), and when absent the reverts pass is skipped and `.ctc list`/`.ctc set` report
   "reverts not included in this build" rather than silently no-opping. Vibrancy + compat fixes are
@@ -202,10 +202,17 @@ Full (0 unmapped): soil, grasscover, forestfloor, peat, clay, farmland, cob, ram
 Near-full: mudbrick (1), stonepath (1), tallgrass (2 = Conquest's own typo'd filenames).
 **gravels was intentionally dropped** (2026-08, user's call — they don't want gravel reverted); it
 was the largest family (325 files) and is no longer in FAMILIES, Config, or the bundle.
-**Config defaults (2026-08, = the release config):** ground families `soil`, `grasscover`,
-`forestfloor`, `clay`, `farmland`, `stonepath` default ON/vanilla; the earthy building materials
-`peat`, `cob`, `rammedearth`, `mudbrick` default OFF/conquest. Foliage (`tallgrass`, `otherfoliage`)
-defaults OFF/conquest. Vibrancy on, green sat 0.8.
+**Config defaults (as of 2026-08-16, = the public release config): NEUTRAL — the mod changes nothing
+about Conquest's appearance out of the box.** All twelve family reverts default **OFF/conquest**, and
+the vibrancy dial defaults **off** (`GrassVibrancy=false`, green sat `1.0`). Every visual tweak is
+opt-in via `.ctc` / config; the compat fixes (`EnableSlabsFix`, `EnableTiledSelectorClamp`) stay on.
+Rationale: the public build ships no base-game art, so reverts are inert there, and we don't impose
+the author's taste on everyone. The reverts feature is scrubbed from all public surfaces (README,
+in-game handbook `lang/en.json`, `modinfo` description) but stays in code — usable in the private
+build or with a self-generated payload. Nick's personal machine keeps its own opinionated
+`conquesttweaks.json`, so the compiled-default flip doesn't disturb his install.
+(Earlier opinionated release config, for reference: soil/grasscover/forestfloor/clay/farmland/stonepath
+ON/vanilla, earthy materials + foliage OFF, vibrancy on at green sat 0.8.)
 Partial: **otherfoliage (216 unmapped)** — Conquest renamed vanilla's named fern/flower variants
 (`tall`,`short`,`center1`…) to numeric ones; no clean mapping. Defaults OFF; steer users to the tint
 dial instead. Don't invest in per-species foliage mapping unless asked.

@@ -171,6 +171,13 @@ public class ConquestTweaksModSystem : ModSystem
                 .WithDescription("Toggle the Terrain Slabs doMesh transpiler (GROUP 3): .ctc slabfix [on|off]; no arg reports current state. Relog to apply.")
                 .WithArgs(parsers.OptionalWordRange("state", "on", "off"))
                 .HandleWith(OnSlabFix)
+            .EndSubCommand()
+            .BeginSubCommand("reverts")
+                .WithDescription("Manage the per-family vanilla texture reverts")
+                .BeginSubCommand("extract")
+                    .WithDescription("Generate the vanilla-texture payload from your own game files + installed Conquest, so .ctc set can revert families. Relaunch afterwards.")
+                    .HandleWith(OnRevertsExtract)
+                .EndSubCommand()
             .EndSubCommand();
 
         ActivateHarmonyCompat(capi);   // GROUP 3
@@ -230,10 +237,9 @@ public class ConquestTweaksModSystem : ModSystem
         else
         {
             sb.AppendLine("Conquest VS Tweaks & Compatibility:");
-            sb.AppendLine("Texture reverts: not included in this build (no bundled vanilla art).");
-            sb.AppendLine("  The public release ships no base-game textures; per-family reverts need the");
-            sb.AppendLine("  full build, or your own payload via build/extract-vanilla.py. Vibrancy and the");
-            sb.AppendLine("  compatibility fixes below work regardless.");
+            sb.AppendLine("Texture reverts: no vanilla payload yet. Run '.ctc reverts extract' to build one");
+            sb.AppendLine("  from your own game files, then relaunch. Vibrancy and the compatibility fixes");
+            sb.AppendLine("  below work regardless.");
         }
         sb.AppendLine($"Grass vibrancy: {(config.GrassVibrancy ? "on" : "off")}  " +
                       $"green sat x{config.GrassGreenSaturation:0.00}, bri x{config.GrassGreenBrightness:0.00}");
@@ -255,15 +261,36 @@ public class ConquestTweaksModSystem : ModSystem
     {
         if (!revertsAvailable)
             return TextCommandResult.Error(
-                "Texture reverts aren't included in this build (no bundled vanilla art). "
-                + "The public release ships no base-game textures; reverts need the full build or your "
-                + "own payload via build/extract-vanilla.py. Vibrancy and compatibility fixes are unaffected.");
+                "No vanilla payload yet. Run '.ctc reverts extract' to build one from your own game "
+                + "files, then relaunch - after that this command reverts the family.");
         string name = ((string)args[0]).ToLowerInvariant();
         bool useVanilla = (string)args[1] == "vanilla";
         if (!config.SetFamily(name, useVanilla))
             return TextCommandResult.Error($"Unknown surface '{name}'. Use .ctc list to see valid names.");
         api.StoreModConfig(config, ConfigFile);
         return TextCommandResult.Success($"{name} → {(useVanilla ? "vanilla" : "conquest")} (relog to apply).");
+    }
+
+    /// <summary>GROUP 4 enabler. Builds the vanilla-texture revert payload from files the player
+    /// already owns (their game install + their installed Conquest pack) and writes it as a removable
+    /// side-car mod, so the reverts light up on the next launch. This is what makes reverts usable on
+    /// the public build, which ships no bundled art. See <see cref="RevertExtractor"/>. It does NOT
+    /// depend on <see cref="revertsAvailable"/> - it is precisely the step that flips it true next
+    /// launch - so unlike <see cref="OnSet"/> it is available even when no payload is present yet.</summary>
+    private TextCommandResult OnRevertsExtract(TextCommandCallingArgs args)
+    {
+        var r = RevertExtractor.Extract(api);
+        if (!r.Ok)
+            return TextCommandResult.Error(r.Error);
+
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine($"Extracted {r.Applied} vanilla textures across {r.FamilyCount} families from your own game files.");
+        if (r.Unmapped > 0)
+            sb.AppendLine($"({r.Unmapped} Conquest paths had no vanilla source and were skipped - expected.)");
+        sb.AppendLine($"Written to: {r.OutputPath}");
+        sb.AppendLine("Now RELAUNCH the game to load it, then turn on the families you want, e.g.");
+        sb.AppendLine("  .ctc set soil vanilla   (then relog to apply). Delete that folder to undo.");
+        return TextCommandResult.Success(sb.ToString().TrimEnd());
     }
 
     private TextCommandResult OnScan(TextCommandCallingArgs args)

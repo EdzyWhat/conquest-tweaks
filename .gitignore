@@ -6,5 +6,5 @@ obj/
 # build/extract-vanilla.py; don't commit redistributed game art.
 src/assets/conquesttweaks/textures/vanilla/
 
-# Packaged release zips (build/package.sh). The -full zip contains base-game art; never commit.
+# Packaged release zips (build/package.sh). The -private zip contains base-game art; never commit.
 dist/

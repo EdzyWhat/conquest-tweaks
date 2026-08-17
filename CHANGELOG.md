@@ -60,13 +60,20 @@ All notable changes to this project. Dates are ISO (YYYY-MM-DD).
   slab's (diagnosing whether the dirt body actually connects on the slab or only the grass top does).
 - **Two-build packaging** (`build/package.sh`). One codebase / one DLL produces two release zips: a
   **public** build that ships **no base-game textures** (redistributes nothing; the vanilla reverts are
-  inert, vibrancy + compat fixes work fully) and a **`--full`** build that bundles the vanilla payload
-  for personal use (contains base-game art, not for redistribution). The DLL auto-detects the payload
-  at load (`TextureReverts.PayloadPresent`), so the reverts feature and `.ctc list`/`.ctc set` report
-  themselves unavailable in the public build instead of silently no-opping; dropping a self-generated
-  payload (`build/extract-vanilla.py`) into a public install re-enables reverts. `dist/` is git-ignored.
+  inert, vibrancy + compat fixes work fully) and a **`--private`** build that bundles the vanilla
+  payload for personal use only (contains base-game art, never published or shared). The DLL
+  auto-detects the payload at load (`TextureReverts.PayloadPresent`), so the reverts feature and
+  `.ctc list`/`.ctc set` report themselves unavailable in the public build instead of silently
+  no-opping; dropping a self-generated payload (`build/extract-vanilla.py`) into a public install
+  re-enables reverts. `dist/` is git-ignored.
 
 ### Changed
+- **Neutral by default.** All twelve texture-family reverts and the grass vibrancy dial now default
+  **off** (vibrancy saturation `1.0`), so a fresh install changes nothing about Conquest's appearance —
+  every visual tweak is opt-in via `.ctc` / the config. The compatibility fixes stay on (they repair
+  broken rendering, they don't alter the intended look). The reverts feature is undocumented on the
+  public surfaces (README, in-game handbook, portal description) since the public build ships no
+  base-game art to revert *to*; it remains available in a personal/private build.
 - Release manifest (`modinfo.json`) tightened for publishing: author set to the ModDB handle
   `RaptorKhan`, a ≤12-word public-facing `description`, a `website` pointing at the source repo, and
   the `conquest` dependency pinned to its tested floor (`>=1.0.7`) so the mod won't load against an

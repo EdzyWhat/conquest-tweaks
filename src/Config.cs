@@ -20,39 +20,39 @@ namespace ConquestTweaks;
 /// </summary>
 public class Config
 {
-    // ---- Ground / dirt families. Most default ON (revert to vanilla); the earthy building
-    //      materials peat/cob/rammedearth/mudbrick default OFF (Conquest's look is kept). ----
+    // ---- Ground / dirt families. ALL default OFF: out of the box the mod keeps Conquest's look
+    //      untouched, and each family is an opt-in revert (turn on per family, then relog). ----
 
     /// <summary>Soil &amp; the grass-block dirt body (all fertility tiers).</summary>
-    public bool RevertSoil = true;
+    public bool RevertSoil = false;
 
     /// <summary>The green grass top-cover overlay on grass blocks (coverage stages).</summary>
-    public bool RevertGrassCover = true;
+    public bool RevertGrassCover = false;
 
     /// <summary>Forest floor.</summary>
-    public bool RevertForestFloor = true;
+    public bool RevertForestFloor = false;
 
-    /// <summary>Peat &amp; peat piles. Default OFF - keep Conquest's peat.</summary>
+    /// <summary>Peat &amp; peat piles.</summary>
     public bool RevertPeat = false;
 
     /// <summary>Clay (blue / fire / red).</summary>
-    public bool RevertClay = true;
+    public bool RevertClay = false;
 
     /// <summary>Farmland (dry/moist tiers and their sides).</summary>
-    public bool RevertFarmland = true;
+    public bool RevertFarmland = false;
 
-    /// <summary>Cob. Default OFF - keep Conquest's cob.</summary>
+    /// <summary>Cob.</summary>
     public bool RevertCob = false;
 
-    /// <summary>Rammed earth. Default OFF - keep Conquest's rammed earth.</summary>
+    /// <summary>Rammed earth.</summary>
     public bool RevertRammedEarth = false;
 
-    /// <summary>Mud brick. Default OFF - keep Conquest's mud brick.</summary>
+    /// <summary>Mud brick.</summary>
     public bool RevertMudBrick = false;
 
     /// <summary>Stone path (this covers the path block plus its slab &amp; stair variants,
     /// which reuse the same textures).</summary>
-    public bool RevertStonePath = true;
+    public bool RevertStonePath = false;
 
     // ---- Foliage families (default OFF: Conquest reorganized these heavily; the grass-tint
     //      vibrancy dial below is usually the better lever for "too green" plants) ----
@@ -78,12 +78,16 @@ public class Config
     /// so desaturating grasstint alone is nearly invisible. That tint is shared by everything green
     /// (grass, ferns, bushes, reeds, AND tree leaves via <c>climatePlantTint</c>), so this dial
     /// tones down all foliage green together - there is no colormap-only way to knock down grass
-    /// green while sparing leaves.</summary>
-    public bool GrassVibrancy = true;
+    /// green while sparing leaves.
+    ///
+    /// Default OFF: out of the box the mod leaves Conquest's foliage untouched. Turn it on (or run
+    /// <c>.ctc vibrancy &lt;value&gt;</c>, which enables it) to tone green down.</summary>
+    public bool GrassVibrancy = false;
 
     /// <summary>Saturation multiplier applied to GREEN tint pixels. 1.0 = untouched (vanilla
-    /// Conquest look); lower = less vibrant. ~0.8 is a gentle knock-down; ~0.6 is stronger.</summary>
-    public float GrassGreenSaturation = 0.8f;
+    /// Conquest look, the default); lower = less vibrant. ~0.8 is a gentle knock-down; ~0.6 is
+    /// stronger.</summary>
+    public float GrassGreenSaturation = 1.0f;
 
     /// <summary>Optional brightness (HSL lightness) multiplier on green tint pixels. 1.0 = off.
     /// Slightly below 1.0 (e.g. 0.95) tames Conquest's near-neon highlights.</summary>

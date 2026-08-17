@@ -1,6 +1,6 @@
 # Contributing
 
-This mod is an umbrella of four independent feature groups (see [README](./README.md#project-structure)).
+This mod is an umbrella of four independent feature groups (see [Group boundaries](#group-boundaries-dont-cross-them-casually) below).
 Most contributions touch exactly one group; the folder you're in tells you which.
 
 ## Build & test loop (macOS)
@@ -16,6 +16,24 @@ build/restage.sh                   # build + stage to VintagestoryData/Mods/conq
   release build.
 - Texture/tint/patch changes bake into the atlas or resolve server-side at load — there is no live
   preview. Edit, restage, **relog**.
+
+### Packaging a release
+
+`build/package.sh` cuts a zip to `dist/` (git-ignored). One codebase, one DLL, two zips — the DLL
+auto-detects the payload at load (`TextureReverts.PayloadPresent`):
+
+```sh
+build/package.sh              # PUBLIC  → dist/conquesttweaks-<ver>.zip  (no base-game art; the only build to share)
+build/package.sh --private    # PRIVATE → dist/conquesttweaks-<ver>-private.zip  (bundles the vanilla payload)
+```
+
+- **Public** strips `textures/vanilla/`, so it redistributes nothing. The per-family reverts start
+  inert in it, but a player can enable them with `.ctc reverts extract` (see `RevertExtractor.cs`),
+  which regenerates the payload locally from *their own* game files into a `conquesttweaks-vanilla`
+  side-car mod — the handbook's advanced section documents the flow. This is the portal upload.
+- **Private** bundles the base-game payload so reverts work out of the box. It contains Anego Studios
+  art — **personal use only, never publish or share** — and errors unless you've run
+  `build/extract-vanilla.py` first.
 
 ## Re-verifying the patch surface after a game or mod update
 

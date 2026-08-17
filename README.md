@@ -1,63 +1,38 @@
 # Conquest VS Tweaks & Compatibility
 
 A companion mod for the [Conquest VS Edition](https://mods.vintagestory.at/conquest) texture pack —
-an umbrella for tuning the Conquest look and smoothing it over alongside other mods. It bundles:
+it tunes one part of the Conquest look and smooths the pack over alongside other mods. It bundles:
 
-- **Per-family vanilla reverts** — selectively restore the game's **original** appearance for the
-  block families you find too vibrant/cartoonish, each an independent toggle.
-- **A green-selective grass-tint vibrancy dial** — tone down foliage green without touching dry,
-  brown, or autumn tones.
+- **A green-selective grass-tint vibrancy dial** — optionally tone down foliage green without touching
+  dry, brown, or autumn tones. Off by default; opt in when you want it.
 - **Optional per-mod compatibility fixes** — each activates automatically *only when its target mod
   is detected*, so you can run this alongside whatever's in your pack and it just fixes what's there
   to fix. Currently: the Visible Ores & Minerals ore-vein repair and the Terrain Slabs connected-
   textures fix (both below).
 
-Requires the `conquest` mod (and `game`); the compatibility fixes have **no** hard dependency on
-their targets — they're dormant until the target mod shows up.
+Out of the box it changes nothing about how Conquest looks — the vibrancy dial starts off, and the
+compatibility fixes only repair rendering that's already broken. Requires the `conquest` mod (and
+`game`); the compatibility fixes have **no** hard dependency on their targets — they're dormant until
+the target mod shows up.
 
-> **Source-mod authors:** each compatibility fix is written to fold back into the mod it targets. See
-> [`docs/HANDOFF-terrainslabs.md`](./docs/HANDOFF-terrainslabs.md),
-> [`docs/HANDOFF-vom.md`](./docs/HANDOFF-vom.md), and
-> [`docs/HANDOFF-conquest.md`](./docs/HANDOFF-conquest.md), plus [`CONTRIBUTING.md`](./CONTRIBUTING.md).
+> **Mod authors:** each compatibility fix is built to fold back into the mod it targets — see the handoff docs in [`docs/`](./docs/) and [`CONTRIBUTING.md`](./CONTRIBUTING.md).
 
-The visual tweaks (texture reverts + vibrancy) are **client-side** — install it on just your client
-and they work on any server. The optional Visible Ores & Minerals fix (below) is the one part that
-patches server-side data, so in **multiplayer** it only takes effect if the mod is installed on the
-server too; in single-player everything works out of the box. The mod is not required on the server
-(`requiredOnServer: false`), so a client-only install is always safe.
-
-> **Two builds, one codebase.** The **public** release ships **no base-game textures**, so it
-> redistributes nothing — in it the per-family *vanilla reverts* are **inert** (`.ctc set … vanilla`
-> reports this), while the vibrancy dial and all compatibility fixes work fully. The **full** build
-> additionally bundles the vanilla payload so reverts work out of the box; it contains base-game art
-> (© Anego Studios) and is for **personal use, not redistribution**. The same DLL powers both — it
-> auto-detects whether the payload is present at load, so dropping your own payload into a public
-> install (via `build/extract-vanilla.py`) re-enables reverts. See [Build & package](#build-package--install-macos).
-
-## What it can revert (each an independent toggle)
-
-> Reverts require the **full build** (or your own payload via `build/extract-vanilla.py`); the public
-> release ships without the base-game art and this feature is inert there.
-
-Ground/dirt reverted to **vanilla** by default: `soil`, `grasscover` (the grass-block top-cover),
-`forestfloor`, `clay`, `farmland`, `stonepath` (path + its slab/stair variants).
-
-Kept on **Conquest** by default (earthy building materials — switch with `.ctc set <name> vanilla`):
-`peat`, `cob`, `rammedearth`, `mudbrick`.
-
-Foliage (default **conquest**): `tallgrass`, `otherfoliage` (ferns/flowers/herbs/reeds/bamboo/…).
-Conquest heavily restructured foliage, so `otherfoliage` coverage is **partial** — the grass-tint
-vibrancy dial (below) is usually the better lever for "plants are too green."
+The vibrancy dial is **client-side** — install it on just your client and it works on any server. The
+optional Visible Ores & Minerals fix (below) is the one part that patches server-side data, so in
+**multiplayer** it only takes effect if the mod is installed on the server too; in single-player
+everything works out of the box. The mod is not required on the server (`requiredOnServer: false`), so
+a client-only install is always safe.
 
 ## Grass/plant vibrancy (green-selective)
 
-Desaturates only the **green** part of the plant tint, leaving dry/brown/autumn tones untouched.
-`GrassGreenSaturation` is the main knob (1.0 = unchanged, **0.8 = the default gentle knock-down**,
-~0.6 = stronger, 0.1 = almost grey-green).
+Desaturates only the **green** part of the plant tint, leaving dry/brown/autumn tones untouched. It's
+**off by default**; run `.ctc vibrancy 0.8` (or set `GrassVibrancy: true` in the config) to enable it.
+`GrassGreenSaturation` is the main knob (1.0 = unchanged, **0.8 = a gentle knock-down**, ~0.6 =
+stronger, 0.1 = almost grey-green).
 
 The game tints plants by blending two colormaps — a **climate plant tint** (the dominant base) and
 a **seasonal grass tint** (overlaid on top). Because the climate tint dominates, this dial
-desaturates **both** by default; touching only the seasonal tint is nearly invisible. The climate
+desaturates **both**; touching only the seasonal tint is nearly invisible. The climate
 tint is shared by grass, ferns, bushes, reeds **and tree leaves**, so the effect tones down all
 foliage green together — there's no colormap-only way to mute grass while leaving leaves vivid. (For
 the curious: `SeasonGrassTintOnly: true` restricts the pass to the seasonal grass tint, which
@@ -69,37 +44,23 @@ Three ways to configure it, all applying **on relog**:
 
 **1. In-game commands** (chat — note the leading period, it's a client command):
 
-- `.ctc list` — show which texture each surface uses (vanilla/conquest) and the vibrancy settings
-- `.ctc set <name> vanilla|conquest` — pick the texture for a surface, e.g. `.ctc set stonepath conquest`
-- `.ctc vibrancy <0..1>` — set the green-saturation multiplier
+- `.ctc list` — show the current vibrancy settings and which compatibility fixes are active
+- `.ctc vibrancy <0..1>` — set the green-saturation multiplier (setting a value turns the dial on)
 - `.ctc scan` — list blocks that resolve to the pink/black placeholder; writes a full report to
   `ModConfig/ctc-missing-textures.txt`
 - `.ctc slabfix [on|off]` — toggle the Terrain Slabs connected-texture fix (`Config.EnableSlabsFix`);
   no arg reports the current state. Relog to apply.
 
 **2. In-game handbook** — open the Survival Handbook (`H`) → **Guides** → **Conquest VS Tweaks & Compatibility**
-for a page listing the commands, the revertable families, and the vibrancy dial.
+for a page listing the commands, the vibrancy dial, and the compatibility fixes.
 
 **3. Config file** — auto-created at `VintagestoryData/ModConfig/conquesttweaks.json`. Holds
 everything the commands set, plus advanced knobs with no command: `GrassGreenBrightness`, the green
 hue band (`GreenHueCenter`/`GreenHueRange`/`GreenHueFalloff`), `SeasonGrassTintOnly`, and
 `ReportMissingTexturesOnLoad`.
 
-> **Changes apply on relog.** Block textures and tint are baked into the texture atlas at world
-> load, so there is no per-frame live preview — edit config / run a command, then relog.
-
-## How it works
-
-In `AssetsLoaded` (after the game's assets are loaded and patched, but before the block texture
-atlas is composed) the mod overwrites Conquest's texture **bytes** in-memory with bundled vanilla
-source art, keyed at the same path. Conquest's extra tiled variants collapse onto the single vanilla
-texture → vanilla look. The revert pass edits no blocktype JSON, so it's load-order-independent.
-(The only JSON patches the mod ships are the optional VOM ore fix below.)
-
-**It never introduces the pink/black `unknown` placeholder:** a Conquest texture is overwritten only
-when a real vanilla source was bundled for it *and* that Conquest asset actually exists in the loaded
-set. When no payload is bundled (the public build), the pass finds nothing to overwrite and is a
-silent no-op — the reverts feature simply reports itself unavailable.
+> **Changes apply on relog.** The tint is baked into the texture atlas at world load, so there is no
+> per-frame live preview — edit config / run a command, then relog.
 
 ## Visible Ores & Minerals compatibility (ore placeholders)
 
@@ -135,37 +96,20 @@ It activates only when `terrainslabs` is detected and is on by default; disable 
 > If a game update moves the code it targets, the fix quietly deactivates (a warning is logged) and
 > the rest of the mod keeps working.
 
-## Project structure
-
-The mod is an umbrella of **four independent feature groups**, foldered so a source-mod author can
-read (and adopt) exactly their slice — the folder boundary *is* the fold-in boundary:
-
-| Group | Lives in | Folds into | Handoff |
-|---|---|---|---|
-| **1. Conquest base copying** | *(nothing)* | — | We copy no Conquest art. The only bundled art is base-game vanilla (group 4's payload), owned by Anego Studios — see [CREDITS.md](./CREDITS.md). |
-| **2. Ore-pack JSON compat** | `src/assets/conquesttweaks/patches/compatibility/<modid>/` | VOM / Conquest | [HANDOFF-vom](./docs/HANDOFF-vom.md), [HANDOFF-conquest](./docs/HANDOFF-conquest.md) |
-| **3. Terrain Slabs Harmony fix** | `src/Compat/TerrainSlabs/` | Terrain Slabs | [HANDOFF-terrainslabs](./docs/HANDOFF-terrainslabs.md) |
-| **4. Standalone reverts / tweaks** | `src/Core/` | nobody (the mod itself) | — |
-
-`src/ConquestTweaksModSystem.cs` is a thin orchestrator that loads config, registers the `.ctc`
-commands, and dispatches to the groups; `src/Compat/README.md` maps the two compat mechanisms.
-
 ## Build & package (macOS)
 
 Develop / test in-place:
 
 ```sh
-python3 build/extract-vanilla.py   # (optional) regenerate the vanilla payload from your local install
 build/restage.sh                   # build + copy to VintagestoryData/Mods/conquesttweaks
 ```
 
-Cut a release zip under `dist/`:
+Cut the release zip under `dist/`:
 
 ```sh
-build/package.sh                   # PUBLIC: no base-game art, portal-safe → dist/conquesttweaks-<ver>.zip
-build/package.sh --full            # FULL: bundles the vanilla payload (personal use) → …-<ver>-full.zip
+build/package.sh                   # → dist/conquesttweaks-<ver>.zip (portal-safe, redistributes nothing)
 ```
 
-The public zip redistributes nothing; the `--full` zip contains base-game art and must not be
-published — it requires the payload to exist first (run `extract-vanilla.py`). `dist/` is git-ignored.
 `VINTAGE_STORY` overrides the game path; `VS_DATA` overrides the data dir; `CONFIG` sets Debug/Release.
+`dist/` is git-ignored. (Contributors: see [`CONTRIBUTING.md`](./CONTRIBUTING.md) for the complete
+build & packaging notes.)

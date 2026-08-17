@@ -114,7 +114,29 @@ makes an over-declared `tilesWidth` fail safe instead of rendering black, and a 
 diagnostic) is engine-level robustness and tooling, not pack content — useful to know about, but not
 something you need to carry.
 
-## 4. Optional: an upstream "vanilla per family" toggle
+## 4. A positioning bug in your large wall-lantern shape
+
+Your **large** lantern renders off its bracket when wall-mounted — the glass body doesn't seat on the
+arm the way it should (your **small** wall lantern is fine). We traced it to
+`shapes/block/metal/lantern/large/wall.json`: it has the glass **body** (`lantern` group) and the
+**wallmount** bracket as two *independent top-level groups*, so the body doesn't share the bracket's
+coordinate frame and ends up mispositioned relative to it.
+
+The fix is structural, and it matches how your **small** wall lantern is already authored: wrap both
+groups in a single parent group. Your `small/wall.json` nests everything under one `origin` group; the
+large one skips that and keeps the body and bracket as siblings. Putting the large body and bracket in a
+shared parent group seats the body correctly — no coordinate dialing-in needed; it was right the moment
+the two groups were combined.
+
+We ship exactly that as a stopgap
+([`patches/compatibility/conquest/lantern-large-wall.json`](../src/assets/conquesttweaks/patches/compatibility/conquest/lantern-large-wall.json)):
+it `add`s an `overall` wrapper group and `move`s your existing `lantern` and `wallmount` nodes into it
+(relocating your nodes, not restating their geometry), plus the handful of transform scalars that come
+with the wrapping. It references only your shape by path and ships none of your art, but it's
+index-based against your 1.0.7 element tree, so it really belongs upstream — the clean root fix is to
+author `large/wall.json` with the shared parent group the way `small/wall.json` already has one.
+
+## 5. Optional: an upstream "vanilla per family" toggle
 
 Our mod also does something you might find interesting for the pack itself: a per-family **revert to
 vanilla** (soil, grass cover, forest floor, clay, farmland, stone path, …) plus a green-selective
@@ -130,11 +152,14 @@ approach and the family groupings might be a useful reference. Purely an offer; 
 
 ## On the bundled art (the licensing bit)
 
-The one thing this mod bundles is **base-game Vintage Story textures** — used only to restore the
-game's *own* original look over the pack, redistributed byte-for-byte, and owned by Anego Studios (not
-you, and not relicensed by us — see [`CREDITS.md`](../CREDITS.md)). It bundles **zero** Conquest
-textures. If anything in here looks like it's leaning on your art beyond referencing it by path, tell
-me and I'll fix it.
+The **public** build (the one on the mod portal) bundles **no textures at all** — not yours, not the
+base game's — so it redistributes nothing; the per-family "vanilla revert" feature is simply inert
+there and re-enables itself only if a player generates their own base-game payload locally. A separate
+**private** build (personal use only, never published or shared) bundles base-game Vintage Story
+textures to restore the game's *own* original look over the pack; that art is owned by Anego Studios
+(not you, and not relicensed by us — see [`CREDITS.md`](../CREDITS.md)). Either way it bundles **zero**
+Conquest textures. If anything in here looks like it's leaning on your art beyond referencing it by
+path, tell me and I'll fix it.
 
 ---
 

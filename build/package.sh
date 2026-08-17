@@ -6,13 +6,15 @@
 #
 #   PUBLIC  (default)  dist/conquesttweaks-<version>.zip
 #       Ships NO base-game art (assets/conquesttweaks/textures/vanilla/ is excluded), so it
-#       redistributes nothing. The per-family vanilla reverts are inert in this build; vibrancy
-#       and the compatibility fixes work fully. This is the portal-safe upload.
+#       redistributes nothing. This is the portal-safe upload, and the only build meant to be
+#       shared: vibrancy and the compatibility fixes work fully; the per-family texture reverts
+#       are inert (no bundled payload).
 #
-#   FULL   (--full)    dist/conquesttweaks-<version>-full.zip
-#       Includes the bundled vanilla-texture payload, so reverts work out of the box. Contains
-#       base-game textures (c) Anego Studios => PERSONAL USE, do not publish. Requires the payload
-#       to be present first: run  python3 build/extract-vanilla.py  against your own install.
+#   PRIVATE  (--private)   dist/conquesttweaks-<version>-private.zip
+#       Includes the bundled vanilla-texture payload, so the per-family reverts work out of the
+#       box. Contains base-game textures (c) Anego Studios => PERSONAL USE ONLY, never publish or
+#       share. Requires the payload to be present first: run  python3 build/extract-vanilla.py
+#       against your own install.
 #
 # Env (shared with restage.sh):
 #   CONFIG   Debug|Release (default Release for packaging)
@@ -26,7 +28,7 @@ TFM="net10.0"
 MODID="conquesttweaks"
 
 MODE="public"
-if [ "${1:-}" = "--full" ]; then MODE="full"; fi
+if [ "${1:-}" = "--private" ]; then MODE="private"; fi
 if [ "${1:-}" = "--public" ]; then MODE="public"; fi
 
 VANILLA_DIR="$ROOT/src/assets/$MODID/textures/vanilla"
@@ -46,14 +48,14 @@ cp "$ROOT/src/modinfo.json" "$STAGE/"
 [ -f "$ROOT/src/modicon.png" ] && cp "$ROOT/src/modicon.png" "$STAGE/"
 cp -R "$ROOT/src/assets" "$STAGE/assets"
 
-if [ "$MODE" = "full" ]; then
+if [ "$MODE" = "private" ]; then
     if [ ! -d "$VANILLA_DIR" ] || [ -z "$(find "$VANILLA_DIR" -type f -name '*.png' 2>/dev/null | head -1)" ]; then
-        echo "!! --full needs the vanilla payload, but $VANILLA_DIR is empty." >&2
+        echo "!! --private needs the vanilla payload, but $VANILLA_DIR is empty." >&2
         echo "   Generate it first:  python3 build/extract-vanilla.py" >&2
         exit 1
     fi
-    SUFFIX="-full"
-    echo ">> FULL build: bundling vanilla payload (PERSONAL USE - contains base-game art, do not publish)"
+    SUFFIX="-private"
+    echo ">> PRIVATE build: bundling vanilla payload (PERSONAL USE - contains base-game art, never publish)"
 else
     # PUBLIC: strip the base-game texture payload so nothing is redistributed.
     rm -rf "$STAGE/assets/$MODID/textures/vanilla"
