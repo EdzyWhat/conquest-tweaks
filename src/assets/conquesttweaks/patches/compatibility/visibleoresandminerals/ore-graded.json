@@ -1,6 +1,6 @@
 [
 	{
-		"_comment": "VOM compat. Conquest's `op:remove /textures` strips these ore blocktypes, so VOM's own `op:add /textures/cube|ore1ByType` silently fails -> its 3D vein shapes have no #cube/#ore1 mapping and render the pink/black placeholder. We `addmerge` onto the PARENT /textures (which resolves to the block root and so works even when /textures was removed), re-adding a gap-free `cube` for every ore/rock combo plus VOM's ore1 lump mapping. Texture refs are UNQUALIFIED = game domain (base survival/ content registers under game:, exactly as VOM references it; a `survival:` domain does not resolve at runtime). The cube base uses Conquest's own rock art (conquest/{rock}/sides/1, present for all 24 rocks) so the surrounding stone matches the pack instead of VOM's vanilla {rock}1. This mod is Universal so the patch applies SERVER-side where blocktype JSON lives (a client-only mod's patch has no target and silently misses). Gated dependsOn visibleoresandminerals; applies after Conquest's remove because this mod hard-depends on conquest (loads later).",
+		"_comment": "VOM compat. Conquest's `op:remove /textures` strips these ore blocktypes, so VOM's own `op:add /textures/cube|ore1ByType` silently fails -> its 3D vein shapes have no #cube/#ore1 mapping and render the pink/black placeholder. We `addmerge` onto the PARENT /textures (which resolves to the block root and so works even when /textures was removed), re-adding a gap-free `cube` for every ore/rock combo plus VOM's ore1 lump mapping. Texture refs are UNQUALIFIED = game domain (base survival/ content registers under game:, exactly as VOM references it; a `survival:` domain does not resolve at runtime). The cube uses Conquest's own rock art (conquest/{rock}/sides/1) so the surrounding stone matches the pack instead of VOM's vanilla {rock}1, and the `overlays` ore stain is what actually paints the ore onto the vein (confirmed 2026-08-16: dropping the overlay renders plain stone with no visible ore - the ore appearance is the cube overlay, not a separate lump element), so the overlay is REQUIRED. Deliberately a SINGLE fixed stone (sides/1), NOT randomized per block: per-block stone variation is UNREACHABLE for these blocks via a JSON patch. VOM veins draw as EnumDrawType.JSON and go through JsonTesselator.doMesh, which bakes exactly ONE mesh for this ore_vein shape regardless of how many texture variants exist - so MurmurHash3Mod has nothing to pick among. Proven empirically via `.ctc drawtype nativecopper` with EnableSlabsFix off: neither an explicit `alternates` list (baseVars=8) nor a bare `sides/*` wildcard (baseVars up to 64 = the full sides set) produced ANY block-to-block variation, even on high-contrast rocks (sandstone/granite/shale). BakedVariants populate but doMesh never selects them for this shape (true seamless connection like Conquest's full Cube-drawtype rock block is likewise not reachable on the JSON path). So we ship VOM's own single-texture look with Conquest's matching rock art - correct render, no placeholder, which is the real win. This mod is Universal so the patch applies SERVER-side where blocktype JSON lives (a client-only mod's patch has no target and silently misses). Gated dependsOn visibleoresandminerals; applies after Conquest's remove because this mod hard-depends on conquest (loads later).",
 		"op": "addmerge",
 		"file": "game:blocktypes/stone/ore-graded.json",
 		"path": "/textures",
@@ -8,11 +8,7 @@
 		"value": {
 			"cube": {
 				"base": "block/stone/rock/conquest/{rock}/sides/1",
-				"overlays": [ "block/stone/ore/{type}1" ],
-				"alternates": [
-					{ "base": "block/stone/rock/conquest/{rock}/sides/1", "overlays": [ "block/stone/ore/{type}2" ] },
-					{ "base": "block/stone/rock/conquest/{rock}/sides/1", "overlays": [ "block/stone/ore/{type}3" ] }
-				]
+				"overlays": [ "block/stone/ore/{type}1" ]
 			},
 			"ore1ByType": {
 				"*-quartz_nativegold-*": { "base": "item/resource/nugget/nativegold" },

@@ -284,16 +284,27 @@ public class ConquestTweaksModSystem : ModSystem
             bool hasSecond = secondBaked != null;
             int secondTiles = secondBaked?.BakedTiles?.Length ?? 0;
 
-            // Base (dirt-body) tiled-tile count on the top face. This is the layer the soil/clay base
-            // fix targets: a connected base bakes N tiles here (e.g. low/verylow soil = 9, high = 16),
-            // while a bare `/*` alternate base bakes 0. Comparing baseTiles on a full grass block vs.
-            // its slab tells us whether the base actually connects on the slab, or only the overlay
-            // does (the open "under-grass base shows one tile" question).
-            var baseBaked =
-                block.Textures != null
-                && block.Textures.TryGetValue(BlockFacing.UP.Code, out var upct)
-                    ? upct?.Baked
-                    : null;
+            // Base tile/variant counts. WHICH texture code matters depends on the block: the soil/clay
+            // slab fix targets the top-face grass body (code "up"), but JSON-drawtype ore veins (VOM)
+            // reference "#cube" in their shape and carry no "up" texture at all - reading "up" there
+            // measures nothing and silently reports 0/0. So pick the primary code the block's mesh
+            // actually uses: cube > all > up (first present). The chosen code is emitted in the
+            // signature (baseCode=) so the report is never ambiguous about what was measured.
+            string baseCode = "up";
+            CompositeTexture? baseCt = null;
+            if (block.Textures != null)
+            {
+                foreach (var c in new[] { "cube", "all", BlockFacing.UP.Code })
+                {
+                    if (block.Textures.TryGetValue(c, out var found) && found != null)
+                    {
+                        baseCode = c;
+                        baseCt = found;
+                        break;
+                    }
+                }
+            }
+            var baseBaked = baseCt?.Baked;
             int baseTiles = baseBaked?.BakedTiles?.Length ?? 0;
             // Alternate-texture (BakedVariants) count on the base. This is the layer that actually
             // produces VARIATION on the JSON/doMesh render path (grassless `-none` slabs): doMesh
@@ -306,7 +317,7 @@ public class ConquestTweaksModSystem : ModSystem
 
             string sig = $"draw={block.DrawType} pass={block.RenderPass} shape={shapeBase} "
                        + $"hasTiles={block.HasTiles} hasAlt={block.HasAlternates} "
-                       + $"baseTiles={baseTiles} baseVars={baseVariants} "
+                       + $"baseCode={baseCode} baseTiles={baseTiles} baseVars={baseVariants} "
                        + $"2ndTex={(hasSecond ? "yes" : "no")} 2ndTiles={secondTiles}";
 
             if (groups.TryGetValue(sig, out var g))

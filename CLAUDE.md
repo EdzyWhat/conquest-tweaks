@@ -233,7 +233,22 @@ JSON patch has no target and silently misses (log: "missing files on N patches")
 Universal (`modinfo.json`; `requiredOnClient:true`, `requiredOnServer:false`) lets the patch apply
 server-side where the blocktype exists; the server resolves the veins and ships them to the client.
 The **C# ModSystem stays client-only** (`ShouldLoad(side) => side==Client`) — only the JSON asset
-patches ride the server side. (Pending in-game verification of the ore render at time of writing.)
+patches ride the server side. **Verified in-game (2026-08-16):** VOM ore veins render correctly with
+Conquest stone + ore/gem lumps, no pink/black placeholder.
+
+**Per-block stone variation is NOT achievable here and we don't attempt it (settled 2026-08-16).** The
+veins draw as `EnumDrawType.JSON` → `JsonTesselator.doMesh`, which bakes exactly **one** mesh for the
+`ore_vein` shape no matter how many texture variants the `cube` carries, so `MurmurHash3Mod` has nothing
+to pick among. Proven with `.ctc drawtype nativecopper` (EnableSlabsFix off): an explicit `alternates`
+list (`baseVars=8`) **and** a bare `sides/*` wildcard (`baseVars` up to **64** = the full sides set)
+both rendered dead-uniform, even on high-contrast rocks (sandstone/granite/shale). `BakedVariants`
+populate but `doMesh` never selects them for this shape (same JSON-path ceiling as the grassless slabs;
+see the Terrain Slabs section). Also confirmed: the ore appearance is the **cube `overlays` ore stain**,
+not a separate lump element — dropping the overlay renders plain stone with no visible ore, so the
+overlay is **required**. Final form is therefore a single fixed `sides/1` + ore overlay: VOM's own
+single-texture look with Conquest's matching rock art. NB: the `.ctc drawtype` diagnostic reads the
+`cube` texture code for these blocks (it prefers `cube` → `all` → `up`); an earlier version read only
+`up` and silently reported `baseVars=0` for the veins, which masked all of this for several cycles.
 
 **The fix = three JSON patches** at `assets/conquesttweaks/patches/compatibility/
 visibleoresandminerals/ore-{graded,ungraded,gem}.json`, each a single op:
@@ -246,9 +261,9 @@ visibleoresandminerals/ore-{graded,ungraded,gem}.json`, each a single op:
   even though the file sits on disk under `assets/survival/…`; block code domain wins).
 - `dependsOn: [{ "modid": "visibleoresandminerals" }]` — the patch is skipped entirely unless VOM is
   loaded.
-- `value`: a `cube` = `block/stone/rock/conquest/{rock}/sides/1` (Conquest rock art, so the stone
-  around the vein matches the pack — VOM's own cube uses vanilla `{rock}1`) + overlays
-  `block/stone/ore/{type}1|2|3`; and an `ore1ByType` replicating VOM's lump mapping. **All refs are
+- `value`: a `cube` = `block/stone/rock/conquest/{rock}/sides/1` (single fixed Conquest rock art, so the
+  stone around the vein matches the pack — VOM's own cube uses vanilla `{rock}1`) + required overlay
+  `block/stone/ore/{type}1` (the ore stain); and an `ore1ByType` replicating VOM's lump mapping. **All refs are
   UNQUALIFIED = game domain** — base survival/ content registers under `game:` at runtime (a
   `survival:` domain does NOT resolve here), which is exactly how VOM references them; an earlier
   `survival:`-qualified draft was wrong and missed. Per file: graded → nugget/{type}
