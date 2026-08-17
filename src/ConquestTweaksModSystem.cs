@@ -45,6 +45,12 @@ public class ConquestTweaksModSystem : ModSystem
     // GROUP 4 diagnostic scanner, created client-side.
     private PlaceholderScanner scanner = null!;
 
+    // GROUP 4: whether this build bundles the vanilla-texture revert payload. The public release
+    // ships without it (redistributing base-game art is avoided), so the reverts feature is inert
+    // and the .ctc list/set commands say so rather than silently no-op. Set in AssetsLoaded (assets
+    // are populated there, before commands can ever be typed). See TextureReverts.PayloadPresent.
+    private bool revertsAvailable;
+
     // ---------------------------------------------------------------- optional-mod compat registry
     //
     // The always-on core (reverts + vibrancy, GROUP 4) is NOT here - only optional per-mod fixes that
@@ -119,7 +125,9 @@ public class ConquestTweaksModSystem : ModSystem
     public override void AssetsLoaded(ICoreAPI api)
     {
         if (api.Side != EnumAppSide.Client) return;
-        TextureReverts.Apply(api, config);   // GROUP 4
+        revertsAvailable = TextureReverts.PayloadPresent(api);   // GROUP 4 (public build ships no payload)
+        if (revertsAvailable)
+            TextureReverts.Apply(api, config);   // GROUP 4
         TintVibrancy.Apply(api, config);     // GROUP 4
         // GROUP 2 ore repair (VOM / Juicy Ores) is delivered as JSON patches under
         // assets/conquesttweaks/patches/compatibility/<modid>/, not from C# (blocktype JSON is not
@@ -213,9 +221,20 @@ public class ConquestTweaksModSystem : ModSystem
     private TextCommandResult OnList(TextCommandCallingArgs args)
     {
         var sb = new System.Text.StringBuilder();
-        sb.AppendLine("Conquest VS Tweaks & Compatibility - texture per surface (relog to apply):");
-        foreach (var t in config.FamilyToggles())
-            sb.AppendLine($"  {t.Key,-13} {(t.Value ? "vanilla" : "conquest")}");
+        if (revertsAvailable)
+        {
+            sb.AppendLine("Conquest VS Tweaks & Compatibility - texture per surface (relog to apply):");
+            foreach (var t in config.FamilyToggles())
+                sb.AppendLine($"  {t.Key,-13} {(t.Value ? "vanilla" : "conquest")}");
+        }
+        else
+        {
+            sb.AppendLine("Conquest VS Tweaks & Compatibility:");
+            sb.AppendLine("Texture reverts: not included in this build (no bundled vanilla art).");
+            sb.AppendLine("  The public release ships no base-game textures; per-family reverts need the");
+            sb.AppendLine("  full build, or your own payload via build/extract-vanilla.py. Vibrancy and the");
+            sb.AppendLine("  compatibility fixes below work regardless.");
+        }
         sb.AppendLine($"Grass vibrancy: {(config.GrassVibrancy ? "on" : "off")}  " +
                       $"green sat x{config.GrassGreenSaturation:0.00}, bri x{config.GrassGreenBrightness:0.00}");
         sb.AppendLine($"  green band: center {config.GreenHueCenter:0}°, range ±{config.GreenHueRange:0}°, falloff {config.GreenHueFalloff:0}°");
@@ -234,6 +253,11 @@ public class ConquestTweaksModSystem : ModSystem
 
     private TextCommandResult OnSet(TextCommandCallingArgs args)
     {
+        if (!revertsAvailable)
+            return TextCommandResult.Error(
+                "Texture reverts aren't included in this build (no bundled vanilla art). "
+                + "The public release ships no base-game textures; reverts need the full build or your "
+                + "own payload via build/extract-vanilla.py. Vibrancy and compatibility fixes are unaffected.");
         string name = ((string)args[0]).ToLowerInvariant();
         bool useVanilla = (string)args[1] == "vanilla";
         if (!config.SetFamily(name, useVanilla))

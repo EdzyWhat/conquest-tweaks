@@ -26,7 +26,18 @@ patches server-side data, so in **multiplayer** it only takes effect if the mod 
 server too; in single-player everything works out of the box. The mod is not required on the server
 (`requiredOnServer: false`), so a client-only install is always safe.
 
+> **Two builds, one codebase.** The **public** release ships **no base-game textures**, so it
+> redistributes nothing — in it the per-family *vanilla reverts* are **inert** (`.ctc set … vanilla`
+> reports this), while the vibrancy dial and all compatibility fixes work fully. The **full** build
+> additionally bundles the vanilla payload so reverts work out of the box; it contains base-game art
+> (© Anego Studios) and is for **personal use, not redistribution**. The same DLL powers both — it
+> auto-detects whether the payload is present at load, so dropping your own payload into a public
+> install (via `build/extract-vanilla.py`) re-enables reverts. See [Build & package](#build-package--install-macos).
+
 ## What it can revert (each an independent toggle)
+
+> Reverts require the **full build** (or your own payload via `build/extract-vanilla.py`); the public
+> release ships without the base-game art and this feature is inert there.
 
 Ground/dirt reverted to **vanilla** by default: `soil`, `grasscover` (the grass-block top-cover),
 `forestfloor`, `clay`, `farmland`, `stonepath` (path + its slab/stair variants).
@@ -87,7 +98,8 @@ texture → vanilla look. The revert pass edits no blocktype JSON, so it's load-
 
 **It never introduces the pink/black `unknown` placeholder:** a Conquest texture is overwritten only
 when a real vanilla source was bundled for it *and* that Conquest asset actually exists in the loaded
-set.
+set. When no payload is bundled (the public build), the pass finds nothing to overwrite and is a
+silent no-op — the reverts feature simply reports itself unavailable.
 
 ## Visible Ores & Minerals compatibility (ore placeholders)
 
@@ -138,11 +150,22 @@ read (and adopt) exactly their slice — the folder boundary *is* the fold-in bo
 `src/ConquestTweaksModSystem.cs` is a thin orchestrator that loads config, registers the `.ctc`
 commands, and dispatches to the groups; `src/Compat/README.md` maps the two compat mechanisms.
 
-## Build & install (macOS)
+## Build & package (macOS)
+
+Develop / test in-place:
 
 ```sh
-python3 build/extract-vanilla.py   # regenerate bundled vanilla art from your local install
+python3 build/extract-vanilla.py   # (optional) regenerate the vanilla payload from your local install
 build/restage.sh                   # build + copy to VintagestoryData/Mods/conquesttweaks
 ```
 
-`VINTAGE_STORY` overrides the game path; `VS_DATA` overrides the data dir.
+Cut a release zip under `dist/`:
+
+```sh
+build/package.sh                   # PUBLIC: no base-game art, portal-safe → dist/conquesttweaks-<ver>.zip
+build/package.sh --full            # FULL: bundles the vanilla payload (personal use) → …-<ver>-full.zip
+```
+
+The public zip redistributes nothing; the `--full` zip contains base-game art and must not be
+published — it requires the payload to exist first (run `extract-vanilla.py`). `dist/` is git-ignored.
+`VINTAGE_STORY` overrides the game path; `VS_DATA` overrides the data dir; `CONFIG` sets Debug/Release.

@@ -24,6 +24,17 @@ internal static class TextureReverts
 {
     private const string SourcePrefix = "textures/vanilla/";   // under our own (conquesttweaks) domain
 
+    /// <summary>
+    /// True if this build bundles the base-game vanilla texture payload the reverts overwrite with.
+    /// The PUBLIC release ships without it (bundling base-game art would redistribute Anego's
+    /// all-rights-reserved textures), so reverts are inert there; the full/personal build - and any
+    /// install where the user generated their own payload via build/extract-vanilla.py - includes it.
+    /// Detected from the loaded assets, not a build flag, so one DLL serves both builds.
+    /// Uses GetLocations (path listing) rather than GetMany so we don't load every PNG's bytes.
+    /// </summary>
+    public static bool PayloadPresent(ICoreAPI api)
+        => api.Assets.GetLocations(SourcePrefix, "conquesttweaks").Count > 0;
+
     public static void Apply(ICoreAPI api, Config config)
     {
         var enabled = new HashSet<string>(

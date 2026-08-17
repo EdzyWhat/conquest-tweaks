@@ -133,6 +133,14 @@ load, `.ctc` commands, compat dispatch — holding no feature logic.
 - `build/extract-vanilla.py` — dev tool; regenerates the bundled vanilla texture payload from the
   local game install by resolving each Conquest texture in a family to its vanilla source.
 - `build/restage.sh` — build + stage as an unpacked mod folder in `VintagestoryData/Mods/`.
+- `build/package.sh` — cut a release zip to `dist/` (git-ignored). **Two builds, one codebase:**
+  `package.sh` (PUBLIC) strips `textures/vanilla/` so it redistributes **no** base-game art — the
+  portal-safe upload; `package.sh --full` bundles the payload (personal use, contains Anego art, never
+  publish; errors if the payload isn't extracted first). The SAME DLL serves both: it auto-detects the
+  payload at load via `TextureReverts.PayloadPresent` (`api.Assets.GetLocations("textures/vanilla/",
+  "conquesttweaks")`), and when absent the reverts pass is skipped and `.ctc list`/`.ctc set` report
+  "reverts not included in this build" rather than silently no-opping. Vibrancy + compat fixes are
+  build-independent. This is how we ship publicly without redistributing base-game textures.
 - `Directory.Build.props` — net10.0, `VintageStoryPath` from `$VINTAGE_STORY` else the default app.
 
 ## Mechanism (why it's the way it is)

@@ -58,6 +58,13 @@ All notable changes to this project. Dates are ISO (YYYY-MM-DD).
   `ModConfig/ctc-drawtype-<pattern>.txt`. Used to confirm the grass-slab fix (overlay tile count goes
   0 → 16/20 to match the full block) and to compare a full grass block's base `baseTiles` against its
   slab's (diagnosing whether the dirt body actually connects on the slab or only the grass top does).
+- **Two-build packaging** (`build/package.sh`). One codebase / one DLL produces two release zips: a
+  **public** build that ships **no base-game textures** (redistributes nothing; the vanilla reverts are
+  inert, vibrancy + compat fixes work fully) and a **`--full`** build that bundles the vanilla payload
+  for personal use (contains base-game art, not for redistribution). The DLL auto-detects the payload
+  at load (`TextureReverts.PayloadPresent`), so the reverts feature and `.ctc list`/`.ctc set` report
+  themselves unavailable in the public build instead of silently no-opping; dropping a self-generated
+  payload (`build/extract-vanilla.py`) into a public install re-enables reverts. `dist/` is git-ignored.
 
 ### Changed
 - Reorganized the source into four legible feature groups so a source-mod author can read and fold in
@@ -71,6 +78,21 @@ All notable changes to this project. Dates are ISO (YYYY-MM-DD).
 - Added a handoff doc set: `docs/HANDOFF-terrainslabs.md` (BeloMaximka), `docs/HANDOFF-vom.md`
   (Skyforger007), `docs/HANDOFF-conquest.md` (CreativeRealms & Arkaik), plus `CONTRIBUTING.md`, this
   changelog, and a PR template.
+
+### Fixed
+- **VOM ore-vein stone: settled as a single fixed texture.** Per-block stone randomization is
+  unreachable for these blocks via a JSON patch — `JsonTesselator.doMesh` bakes exactly one mesh for
+  the `ore_vein` shape regardless of how many texture variants the `cube` carries. Proven with `.ctc
+  drawtype nativecopper` (slabfix off): both an explicit `alternates` list (`baseVars=8`) and a bare
+  `sides/*` wildcard (`baseVars` up to 64) rendered dead-uniform even on high-contrast rock. Also
+  confirmed the ore is painted by the cube `overlays`, not a separate lump element, so the overlay is
+  required. All three ore patches now ship VOM's own single-texture look with Conquest's matching rock
+  art (correct render, no placeholder).
+- **`.ctc drawtype` read the wrong texture code.** It inspected only the `up` face, so for VOM veins
+  (which use `cube`) it silently reported `baseVars=0` and masked the above for several cycles. It now
+  measures the primary code the mesh uses (`cube` → `all` → `up`) and prints `baseCode=` in the report.
+- **LICENSE scope note** pointed at a nonexistent `conquestvanillavom` asset domain; corrected to the
+  real `conquesttweaks/textures/vanilla/`.
 
 ### Notes
 - **Terrain Slabs coverage** confirmed in-game (Conquest v1.0.7, VS 1.22.6):

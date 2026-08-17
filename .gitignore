@@ -5,3 +5,6 @@ obj/
 # Bundled vanilla texture payload is regenerated from the local game install by
 # build/extract-vanilla.py; don't commit redistributed game art.
 src/assets/conquesttweaks/textures/vanilla/
+
+# Packaged release zips (build/package.sh). The -full zip contains base-game art; never commit.
+dist/
