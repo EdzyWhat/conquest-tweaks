@@ -67,6 +67,10 @@ All notable changes to this project. Dates are ISO (YYYY-MM-DD).
   payload (`build/extract-vanilla.py`) into a public install re-enables reverts. `dist/` is git-ignored.
 
 ### Changed
+- Release manifest (`modinfo.json`) tightened for publishing: author set to the ModDB handle
+  `RaptorKhan`, a ≤12-word public-facing `description`, a `website` pointing at the source repo, and
+  the `conquest` dependency pinned to its tested floor (`>=1.0.7`) so the mod won't load against an
+  older Conquest whose data structure differs.
 - Reorganized the source into four legible feature groups so a source-mod author can read and fold in
   exactly their slice (mirrors the handoff model of the sibling `libgui-toolsmith-sharpness` project):
   - `src/Core/` — the standalone reverts / vibrancy / scanner (group 4), extracted from the monolithic
