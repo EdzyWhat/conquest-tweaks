@@ -136,17 +136,6 @@ with the wrapping. It references only your shape by path and ships none of your 
 index-based against your 1.0.7 element tree, so it really belongs upstream — the clean root fix is to
 author `large/wall.json` with the shared parent group the way `small/wall.json` already has one.
 
-## 5. Optional: an upstream "vanilla per family" toggle
-
-Our mod also does something you might find interesting for the pack itself: a per-family **revert to
-vanilla** (soil, grass cover, forest floor, clay, farmland, stone path, …) plus a green-selective
-grass-tint **vibrancy** dial. It's how players who love most of Conquest but want, say, vanilla soil
-get there without leaving the pack. It works by overwriting texture bytes in-memory at load
-(`AssetsLoaded`, before the atlas composes) — it edits no blocktype JSON.
-
-This is **not** something to fold in as-is (it ships base-game art — see below — and it's a client
-preference layer, not pack content). But if you ever wanted an official "toned-down" pack variant, the
-approach and the family groupings might be a useful reference. Purely an offer; ignore freely.
 
 ---
 
