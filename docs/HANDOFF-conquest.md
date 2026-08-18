@@ -142,7 +142,7 @@ author `large/wall.json` with the shared parent group the way `small/wall.json` 
 ## On the bundled art (the licensing bit)
 
 The **public** build (the one on the mod portal) bundles **no textures at all** — not yours, not the
-base game's — so it redistributes nothing; the per-family "vanilla revert" feature is simply inert
+base game's — so it redistributes nothing; my per-family "vanilla revert" feature is simply inert
 there and re-enables itself only if a player generates their own base-game payload locally. A separate
 **private** build (personal use only, never published or shared) bundles base-game Vintage Story
 textures to restore the game's *own* original look over the pack; that art is owned by Anego Studios
