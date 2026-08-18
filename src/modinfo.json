@@ -11,6 +11,6 @@
 	"requiredOnServer": false,
 	"dependencies": {
 		"game": "",
-		"conquest": ">=1.0.7"
+		"conquest": "1.0.7"
 	}
 }
