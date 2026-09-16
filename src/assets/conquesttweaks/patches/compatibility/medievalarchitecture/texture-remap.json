@@ -1,0 +1,1572 @@
+[
+	{
+		"op": "addmerge",
+		"file": "confession:blocktypes/stone/archway/archway2x1_window.json",
+		"path": "/behaviors/2/properties/textures",
+		"dependsOn": [
+			{
+				"modid": "medievalarchitecture"
+			}
+		],
+		"value": {
+			"style-*::rock-*::originblock-plaster::glass-*": {
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/granite/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-rock::glass-*": {
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/granite/sides/1"
+				},
+				"material": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-cobblestone::glass-*": {
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/granite/sides/1"
+				},
+				"material": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-brick::glass-*": {
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/granite/sides/1"
+				},
+				"material": {
+					"base": "game:block/stone/brick/{rock}/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-*::glass-*": {
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/granite/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			}
+		}
+	},
+	{
+		"op": "addmerge",
+		"file": "confession:blocktypes/stone/archway/archway2x1_wood.json",
+		"path": "/behaviors/2/properties/textures",
+		"dependsOn": [
+			{
+				"modid": "medievalarchitecture"
+			}
+		],
+		"value": {
+			"style-*::rock-*::originblock-plaster::wood-*": {
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/granite/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-rock::wood-*": {
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/granite/sides/1"
+				},
+				"material": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-cobblestone::wood-*": {
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/granite/sides/1"
+				},
+				"material": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-brick::wood-*": {
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/granite/sides/1"
+				},
+				"material": {
+					"base": "game:block/stone/brick/{rock}/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-*::wood-*": {
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/granite/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			}
+		}
+	},
+	{
+		"op": "addmerge",
+		"file": "confession:blocktypes/stone/archway/archway2x2_window.json",
+		"path": "/behaviors/2/properties/textures",
+		"dependsOn": [
+			{
+				"modid": "medievalarchitecture"
+			}
+		],
+		"value": {
+			"style-*::rock-*::originblock-plaster::glass-*": {
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/granite/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-rock::glass-*": {
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/granite/sides/1"
+				},
+				"material": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-cobblestone::glass-*": {
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/granite/sides/1"
+				},
+				"material": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-brick::glass-*": {
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/granite/sides/1"
+				},
+				"material": {
+					"base": "game:block/stone/brick/{rock}/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-*::glass-*": {
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/granite/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			}
+		}
+	},
+	{
+		"op": "addmerge",
+		"file": "confession:blocktypes/stone/archway/archway2x2_wood.json",
+		"path": "/behaviors/2/properties/textures",
+		"dependsOn": [
+			{
+				"modid": "medievalarchitecture"
+			}
+		],
+		"value": {
+			"style-*::rock-*::originblock-plaster::wood-*": {
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/granite/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-rock::wood-*": {
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/granite/sides/1"
+				},
+				"material": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-cobblestone::wood-*": {
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/granite/sides/1"
+				},
+				"material": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-brick::wood-*": {
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/granite/sides/1"
+				},
+				"material": {
+					"base": "game:block/stone/brick/{rock}/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-*::wood-*": {
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/granite/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			}
+		}
+	},
+	{
+		"op": "addmerge",
+		"file": "confession:blocktypes/stone/archway/archway_2x1.json",
+		"path": "/behaviors/3/properties/textures",
+		"dependsOn": [
+			{
+				"modid": "medievalarchitecture"
+			}
+		],
+		"value": {
+			"style-*::rock-*::originblock-plaster": {
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-rock": {
+				"material": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-cobblestone": {
+				"material": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-brick": {
+				"material": {
+					"base": "game:block/stone/brick/{rock}/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-*": {
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			}
+		}
+	},
+	{
+		"op": "addmerge",
+		"file": "confession:blocktypes/stone/archway/archway_2x2.json",
+		"path": "/behaviors/3/properties/textures",
+		"dependsOn": [
+			{
+				"modid": "medievalarchitecture"
+			}
+		],
+		"value": {
+			"style-*::rock-*::originblock-plaster": {
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-rock": {
+				"material": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-cobblestone": {
+				"material": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-brick": {
+				"material": {
+					"base": "game:block/stone/brick/{rock}/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-*": {
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			}
+		}
+	},
+	{
+		"op": "addmerge",
+		"file": "confession:blocktypes/stone/archway/archway_3x2.json",
+		"path": "/behaviors/3/properties/textures",
+		"dependsOn": [
+			{
+				"modid": "medievalarchitecture"
+			}
+		],
+		"value": {
+			"style-*::rock-*::originblock-plaster": {
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-rock": {
+				"material": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-cobblestone": {
+				"material": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-brick": {
+				"material": {
+					"base": "game:block/stone/brick/{rock}/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-*": {
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			}
+		}
+	},
+	{
+		"op": "addmerge",
+		"file": "confession:blocktypes/stone/archway/archway_3x2_window.json",
+		"path": "/behaviors/2/properties/textures",
+		"dependsOn": [
+			{
+				"modid": "medievalarchitecture"
+			}
+		],
+		"value": {
+			"style-*::rock-*::originblock-plaster::glass-*": {
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/granite/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-rock::glass-*": {
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/granite/sides/1"
+				},
+				"material": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-cobblestone::glass-*": {
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/granite/sides/1"
+				},
+				"material": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-brick::glass-*": {
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/granite/sides/1"
+				},
+				"material": {
+					"base": "game:block/stone/brick/{rock}/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-*::glass-*": {
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/granite/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			}
+		}
+	},
+	{
+		"op": "addmerge",
+		"file": "confession:blocktypes/stone/archway/archway_3x3.json",
+		"path": "/behaviors/3/properties/textures",
+		"dependsOn": [
+			{
+				"modid": "medievalarchitecture"
+			}
+		],
+		"value": {
+			"style-*::rock-*::originblock-plaster": {
+				"stone": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/3"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-rock": {
+				"material": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"stone": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/3"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-cobblestone": {
+				"material": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				},
+				"stone": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/3"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-brick": {
+				"material": {
+					"base": "game:block/stone/brick/{rock}/1"
+				},
+				"stone": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/3"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-*": {
+				"stone": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/3"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			}
+		}
+	},
+	{
+		"op": "addmerge",
+		"file": "confession:blocktypes/stone/archway/archway_3x3_window.json",
+		"path": "/behaviors/2/properties/textures",
+		"dependsOn": [
+			{
+				"modid": "medievalarchitecture"
+			}
+		],
+		"value": {
+			"style-*::rock-*::originblock-plaster::glass-*": {
+				"stone": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/3"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-rock::glass-*": {
+				"material": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"stone": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/3"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-cobblestone::glass-*": {
+				"material": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				},
+				"stone": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/3"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-brick::glass-*": {
+				"material": {
+					"base": "game:block/stone/brick/{rock}/1"
+				},
+				"stone": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/3"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-*::glass-*": {
+				"stone": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/3"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			}
+		}
+	},
+	{
+		"op": "addmerge",
+		"file": "confession:blocktypes/stone/archway/archway_small.json",
+		"path": "/behaviors/2/properties/textures",
+		"dependsOn": [
+			{
+				"modid": "medievalarchitecture"
+			}
+		],
+		"value": {
+			"style-*::rock-*::originblock-plaster": {
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-rock": {
+				"material": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-cobblestone": {
+				"material": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-brick": {
+				"material": {
+					"base": "game:block/stone/brick/{rock}/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-*": {
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			}
+		}
+	},
+	{
+		"op": "addmerge",
+		"file": "confession:blocktypes/stone/archway/archway_small.json",
+		"path": "/textures",
+		"dependsOn": [
+			{
+				"modid": "medievalarchitecture"
+			}
+		],
+		"value": {
+			"plaster": {
+				"base": "game:block/stone/rock/conquest/granite/sides/1"
+			}
+		}
+	},
+	{
+		"op": "addmerge",
+		"file": "confession:blocktypes/stone/archway/archway_small_window.json",
+		"path": "/behaviors/2/properties/textures",
+		"dependsOn": [
+			{
+				"modid": "medievalarchitecture"
+			}
+		],
+		"value": {
+			"style-*::rock-*::glass-*::originblock-plaster": {
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::glass-*::originblock-rock": {
+				"material": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::glass-*::originblock-cobblestone": {
+				"material": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::glass-*::originblock-brick": {
+				"material": {
+					"base": "game:block/stone/brick/{rock}/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::glass-*::originblock-*": {
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			}
+		}
+	},
+	{
+		"op": "addmerge",
+		"file": "confession:blocktypes/stone/archway/archway_small_window.json",
+		"path": "/textures",
+		"dependsOn": [
+			{
+				"modid": "medievalarchitecture"
+			}
+		],
+		"value": {
+			"plaster": {
+				"base": "game:block/stone/rock/conquest/granite/sides/1"
+			}
+		}
+	},
+	{
+		"op": "addmerge",
+		"file": "confession:blocktypes/stone/archway/archway_small_wood.json",
+		"path": "/behaviors/2/properties/textures",
+		"dependsOn": [
+			{
+				"modid": "medievalarchitecture"
+			}
+		],
+		"value": {
+			"style-*::rock-*::wood-*::originblock-plaster": {
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-rock::wood-*": {
+				"material": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-cobblestone::wood-*": {
+				"material": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-brick::wood-*": {
+				"material": {
+					"base": "game:block/stone/brick/{rock}/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"style-*::originblock-*::rock-*::wood-*": {
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			}
+		}
+	},
+	{
+		"op": "addmerge",
+		"file": "confession:blocktypes/stone/archway/archway_small_wood.json",
+		"path": "/textures",
+		"dependsOn": [
+			{
+				"modid": "medievalarchitecture"
+			}
+		],
+		"value": {
+			"plaster": {
+				"base": "game:block/stone/rock/conquest/granite/sides/1"
+			}
+		}
+	},
+	{
+		"op": "addmerge",
+		"file": "confession:blocktypes/stone/window/archway_half_tiny.json",
+		"path": "/behaviors/2/properties/textures",
+		"dependsOn": [
+			{
+				"modid": "medievalarchitecture"
+			}
+		],
+		"value": {
+			"style-*::rock-*::originblock-none": {
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"inside": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-plaster": {
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"inside": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-rock": {
+				"material": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"inside": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-cobblestone": {
+				"material": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"inside": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-brick": {
+				"material": {
+					"base": "game:block/stone/brick/{rock}/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"inside": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-*": {
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"inside": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				}
+			}
+		}
+	},
+	{
+		"op": "addmerge",
+		"file": "confession:blocktypes/stone/window/archway_half_tiny.json",
+		"path": "/textures",
+		"dependsOn": [
+			{
+				"modid": "medievalarchitecture"
+			}
+		],
+		"value": {
+			"plaster": {
+				"base": "game:block/stone/rock/conquest/granite/sides/1"
+			}
+		}
+	},
+	{
+		"op": "addmerge",
+		"file": "confession:blocktypes/stone/window/archway_half_tiny_window.json",
+		"path": "/behaviors/2/properties/textures",
+		"dependsOn": [
+			{
+				"modid": "medievalarchitecture"
+			}
+		],
+		"value": {
+			"style-*::rock-*::glass-*::originblock-plaster": {
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"inside": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::glass-*::originblock-rock": {
+				"material": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"inside": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::glass-*::originblock-cobblestone": {
+				"material": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"inside": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::glass-*::originblock-brick": {
+				"material": {
+					"base": "game:block/stone/brick/{rock}/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"inside": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::glass-*::originblock-*": {
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"inside": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				}
+			}
+		}
+	},
+	{
+		"op": "addmerge",
+		"file": "confession:blocktypes/stone/window/archway_half_tiny_window.json",
+		"path": "/textures",
+		"dependsOn": [
+			{
+				"modid": "medievalarchitecture"
+			}
+		],
+		"value": {
+			"plaster": {
+				"base": "game:block/stone/rock/conquest/granite/sides/1"
+			}
+		}
+	},
+	{
+		"op": "addmerge",
+		"file": "confession:blocktypes/stone/window/archway_tiny.json",
+		"path": "/behaviors/2/properties/textures",
+		"dependsOn": [
+			{
+				"modid": "medievalarchitecture"
+			}
+		],
+		"value": {
+			"style-*::rock-*::originblock-none": {
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"inside": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-plaster": {
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"inside": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-rock": {
+				"material": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"inside": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-cobblestone": {
+				"material": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"inside": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-brick": {
+				"material": {
+					"base": "game:block/stone/brick/{rock}/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"inside": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::originblock-*": {
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"inside": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				}
+			}
+		}
+	},
+	{
+		"op": "addmerge",
+		"file": "confession:blocktypes/stone/window/archway_tiny.json",
+		"path": "/textures",
+		"dependsOn": [
+			{
+				"modid": "medievalarchitecture"
+			}
+		],
+		"value": {
+			"plaster": {
+				"base": "game:block/stone/rock/conquest/granite/sides/1"
+			}
+		}
+	},
+	{
+		"op": "addmerge",
+		"file": "confession:blocktypes/stone/window/archway_tiny_window.json",
+		"path": "/behaviors/2/properties/textures",
+		"dependsOn": [
+			{
+				"modid": "medievalarchitecture"
+			}
+		],
+		"value": {
+			"style-a::rock-*::glass-*::originblock-plaster": {
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"inside": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				}
+			},
+			"style-a::rock-*::glass-*::originblock-rock": {
+				"material": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"inside": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				}
+			},
+			"style-a::rock-*::glass-*::originblock-cobblestone": {
+				"material": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"inside": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				}
+			},
+			"style-a::rock-*::glass-*::originblock-brick": {
+				"material": {
+					"base": "game:block/stone/brick/{rock}/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"inside": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				}
+			},
+			"style-a::rock-*::glass-*::originblock-*": {
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"inside": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::glass-*::originblock-plaster": {
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"inside": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::glass-*::originblock-rock": {
+				"material": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"inside": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::glass-*::originblock-cobblestone": {
+				"material": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"inside": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::glass-*::originblock-brick": {
+				"material": {
+					"base": "game:block/stone/brick/{rock}/1"
+				},
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"inside": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				}
+			},
+			"style-*::rock-*::glass-*::originblock-*": {
+				"rim": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"plaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"inside": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				}
+			}
+		}
+	},
+	{
+		"op": "addmerge",
+		"file": "confession:blocktypes/stone/window/archway_tiny_window.json",
+		"path": "/textures",
+		"dependsOn": [
+			{
+				"modid": "medievalarchitecture"
+			}
+		],
+		"value": {
+			"plaster": {
+				"base": "game:block/stone/rock/conquest/granite/sides/1"
+			}
+		}
+	},
+	{
+		"op": "addmerge",
+		"file": "confession:blocktypes/stone/window/windowsill_a.json",
+		"path": "/behaviors/1/properties/textures",
+		"dependsOn": [
+			{
+				"modid": "medievalarchitecture"
+			}
+		],
+		"value": {
+			"rock-*::originblock-rock": {
+				"material": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"sill": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"rock-*::originblock-cobblestone": {
+				"material": {
+					"base": "game:block/stone/cobblestone/{rock}/sides/1"
+				},
+				"sill": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"rock-*::originblock-brick": {
+				"material": {
+					"base": "game:block/stone/brick/{rock}/1"
+				},
+				"sill": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"rock-*::originblock-plaster": {
+				"sill": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			},
+			"rock-*::originblock-*": {
+				"sill": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			}
+		}
+	},
+	{
+		"op": "addmerge",
+		"file": "confession:blocktypes/wood/archway/construction_big3x2.json",
+		"path": "/behaviors/3/properties/textures",
+		"dependsOn": [
+			{
+				"modid": "medievalarchitecture"
+			}
+		],
+		"value": {
+			"state-*::rock-*": {
+				"rimstones": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"freshPlaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			}
+		}
+	},
+	{
+		"op": "addmerge",
+		"file": "confession:blocktypes/wood/archway/construction_big3x3.json",
+		"path": "/behaviors/3/properties/textures",
+		"dependsOn": [
+			{
+				"modid": "medievalarchitecture"
+			}
+		],
+		"value": {
+			"state-*::rock-*": {
+				"stonesmooth": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"rimstones": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"freshPlaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			}
+		}
+	},
+	{
+		"op": "addmerge",
+		"file": "confession:blocktypes/wood/archway/construction_medium2x1.json",
+		"path": "/behaviors/3/properties/textures",
+		"dependsOn": [
+			{
+				"modid": "medievalarchitecture"
+			}
+		],
+		"value": {
+			"state-*::rock-*": {
+				"rimstones": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"freshPlaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			}
+		}
+	},
+	{
+		"op": "addmerge",
+		"file": "confession:blocktypes/wood/archway/construction_medium2x2.json",
+		"path": "/behaviors/3/properties/textures",
+		"dependsOn": [
+			{
+				"modid": "medievalarchitecture"
+			}
+		],
+		"value": {
+			"state-*::rock-*": {
+				"rimstones": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"freshPlaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			}
+		}
+	},
+	{
+		"op": "addmerge",
+		"file": "confession:blocktypes/wood/archway/construction_small.json",
+		"path": "/behaviors/2/properties/textures",
+		"dependsOn": [
+			{
+				"modid": "medievalarchitecture"
+			}
+		],
+		"value": {
+			"state-*::rock-*": {
+				"rimstones": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				},
+				"freshPlaster": {
+					"base": "game:block/stone/rock/conquest/{rock}/sides/1"
+				}
+			}
+		}
+	},
+	{
+		"op": "addmerge",
+		"file": "confession:blocktypes/wood/gate/drawbridge.json",
+		"path": "/textures",
+		"dependsOn": [
+			{
+				"modid": "medievalarchitecture"
+			}
+		],
+		"value": {
+			"materialplanks": {
+				"base": "game:block/wood/planks/{wood}/top/1"
+			}
+		}
+	},
+	{
+		"op": "addmerge",
+		"file": "confession:blocktypes/wood/gate/gate.json",
+		"path": "/textures",
+		"dependsOn": [
+			{
+				"modid": "medievalarchitecture"
+			}
+		],
+		"value": {
+			"materialplanks": {
+				"base": "game:block/wood/planks/{wood}/top/1"
+			}
+		}
+	},
+	{
+		"op": "addmerge",
+		"file": "confession:blocktypes/wood/gate/portcullis.json",
+		"path": "/textures",
+		"dependsOn": [
+			{
+				"modid": "medievalarchitecture"
+			}
+		],
+		"value": {
+			"materialplanks": {
+				"base": "game:block/wood/planks/{wood}/top/1"
+			}
+		}
+	},
+	{
+		"op": "addmerge",
+		"file": "confession:blocktypes/wood/roof/roof.json",
+		"path": "/behaviors/1/properties/texturesByType",
+		"dependsOn": [
+			{
+				"modid": "medievalarchitecture"
+			}
+		],
+		"value": {
+			"*-1-*": {
+				"shinglematerial-*::trussmaterial-*": {
+					"trussmaterial": {
+						"base": "game:block/wood/planks/{trussmaterial}/top/1"
+					}
+				}
+			}
+		}
+	},
+	{
+		"op": "addmerge",
+		"file": "confession:blocktypes/wood/trapdoor/trapdoor.json",
+		"path": "/textures",
+		"dependsOn": [
+			{
+				"modid": "medievalarchitecture"
+			}
+		],
+		"value": {
+			"materialplanks": {
+				"base": "game:block/wood/planks/{wood}/top/1"
+			}
+		}
+	},
+	{
+		"op": "addmerge",
+		"file": "confession:blocktypes/wood/trapdoor/trapdoor_small.json",
+		"path": "/textures",
+		"dependsOn": [
+			{
+				"modid": "medievalarchitecture"
+			}
+		],
+		"value": {
+			"materialplanks": {
+				"base": "game:block/wood/planks/{wood}/top/1"
+			}
+		}
+	},
+	{
+		"op": "addmerge",
+		"file": "confession:blocktypes/wood/trapdoor/trapdoor_small_sloped.json",
+		"path": "/textures",
+		"dependsOn": [
+			{
+				"modid": "medievalarchitecture"
+			}
+		],
+		"value": {
+			"materialplanks": {
+				"base": "game:block/wood/planks/{wood}/top/1"
+			}
+		}
+	}
+]

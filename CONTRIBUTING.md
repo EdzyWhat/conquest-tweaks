@@ -56,7 +56,7 @@ Two things here patch code we don't own, so they need re-checking when their tar
 - **Group 4 — `src/Core/`** (reverts, vibrancy, scanner): the mod's own features. Fold into nobody.
 - **Group 3 — `src/Compat/TerrainSlabs/`**: ports to Terrain Slabs unchanged (`docs/HANDOFF-terrainslabs.md`).
 - **Group 2 — `src/assets/.../patches/compatibility/`**: the ore-pack JSON compat (`docs/HANDOFF-vom.md`,
-  `docs/HANDOFF-conquest.md`).
+  `docs/HANDOFF-conquest.md`) and the Medieval Architecture texture remap (`docs/HANDOFF-medievalarchitecture.md`).
 - **Group 1 — Conquest base copying**: intentionally empty. We copy no Conquest art. Do not add any.
 
 ## Assets: what may and may not be committed

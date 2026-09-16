@@ -8,3 +8,7 @@ src/assets/conquesttweaks/textures/vanilla/
 
 # Packaged release zips (build/package.sh). The -private zip contains base-game art; never commit.
 dist/
+
+# Research references for compat work (decompiled DLLs, cloned third-party source,
+# extracted mod packages). Never redistribute their art or code.
+reference/

@@ -15,8 +15,9 @@ namespace ConquestTweaks;
 ///   GROUP 1  Conquest base copying    - none. We copy no Conquest art. The only bundled art is
 ///                                        base-game vanilla texture bytes (group 4's revert payload),
 ///                                        owned by Anego Studios (see CREDITS.md).
-///   GROUP 2  ore-pack JSON compat      - Visible Ores &amp; Minerals (+ Juicy Ores). Pure JSON patches
-///                                        under assets/.../patches/compatibility/&lt;modid&gt;/; no C#. They
+///   GROUP 2  JSON-patch compat         - Visible Ores &amp; Minerals (+ Juicy Ores), Medieval
+///                                        Architecture. Pure JSON patches under
+///                                        assets/.../patches/compatibility/&lt;modid&gt;/; no C#. They
 ///                                        self-gate via the patch's own `dependsOn` and are listed in
 ///                                        CompatFixes only so `.ctc list` can report them.
 ///   GROUP 3  Terrain Slabs Harmony fix - src/Compat/TerrainSlabs/. One transpiler, config-gated.
@@ -65,6 +66,23 @@ public class ConquestTweaksModSystem : ModSystem
             DisplayName = "Visible Ores & Minerals ore-vein fix",
             TargetModId = "visibleoresandminerals",
             Mechanism   = CompatMechanism.JsonPatch,   // gated by dependsOn in the JSON patches; no C#
+        },
+        new CompatFix
+        {
+            DisplayName = "Medieval Architecture stone/wood texture remap",
+            TargetModId = "medievalarchitecture",
+            // JSON patch: MA resolves archway/window/gate/roof/trapdoor textures via
+            // AttributeRenderingLibrary's {rock}/{wood} attribute templating, hardcoded to plain
+            // vanilla texture paths Conquest never overrides in place (rock/brick/cobblestone/planks -
+            // Conquest reskins those via its own separate blocks/folders instead), so they render
+            // vanilla next to Conquest's full blocks. We addmerge each affected block's
+            // textures/texturesByType with the equivalent Conquest tile, gated dependsOn
+            // medievalarchitecture. Verified against Conquest 1.0.7 + MA 1.1.1 - the patch targets
+            // exact behaviors[] array indices, so a future MA release that reorders behaviors could
+            // silently stop matching (fails safe: op just no-ops, doesn't corrupt). Regenerate via
+            // build/generate-ma-compat-patches.py against a fresh extraction if MA updates. See
+            // docs/HANDOFF-medievalarchitecture.md.
+            Mechanism   = CompatMechanism.JsonPatch,
         },
         new CompatFix
         {

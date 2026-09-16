@@ -7,8 +7,8 @@ it tunes one part of the Conquest look and smooths the pack over alongside other
   dry, brown, or autumn tones. Off by default; opt in when you want it.
 - **Optional per-mod compatibility fixes** — each activates automatically *only when its target mod
   is detected*, so you can run this alongside whatever's in your pack and it just fixes what's there
-  to fix. Currently: the Visible Ores & Minerals ore-vein repair and the Terrain Slabs connected-
-  textures fix (both below).
+  to fix. Currently: the Visible Ores & Minerals ore-vein repair, the Medieval Architecture texture
+  remap, and the Terrain Slabs connected-textures fix (all below).
 
 Out of the box it changes nothing about how Conquest looks — the vibrancy dial starts off, and the
 compatibility fixes only repair rendering that's already broken. Requires the `conquest` mod (and
@@ -18,10 +18,10 @@ the target mod shows up.
 > **Mod authors:** each compatibility fix is built to fold back into the mod it targets — see the handoff docs in [`docs/`](./docs/) and [`CONTRIBUTING.md`](./CONTRIBUTING.md).
 
 The vibrancy dial is **client-side** — install it on just your client and it works on any server. The
-optional Visible Ores & Minerals fix (below) is the one part that patches server-side data, so in
-**multiplayer** it only takes effect if the mod is installed on the server too; in single-player
-everything works out of the box. The mod is not required on the server (`requiredOnServer: false`), so
-a client-only install is always safe.
+optional Visible Ores & Minerals and Medieval Architecture fixes (below) patch server-side blocktype
+data, so in **multiplayer** they only take effect if this mod is installed on the server too; in
+single-player everything works out of the box. The mod is not required on the server
+(`requiredOnServer: false`), so a client-only install is always safe.
 
 ## Grass/plant vibrancy (green-selective)
 
@@ -77,6 +77,21 @@ nothing changes if you don't run VOM. No configuration needed.
 Run **`.ctc scan`** to list any blocks that still resolve to the placeholder (it also detects veins
 whose shape needs a texture code the block doesn't provide); a full report is written to
 `ModConfig/ctc-missing-textures.txt`. Without VOM, Conquest 1.0.7's own ores scan clean.
+
+## Medieval Architecture compatibility (vanilla-looking archways)
+
+[Medieval Architecture](https://mods.vintagestory.at/show/mod/31540) adds attribute-driven archways,
+windows, gates, roofs, and trapdoors whose stone/wood textures are picked at the rock/wood type you
+choose in-game. Those textures are hardcoded to plain vanilla paths — and Conquest never reskins
+several of those exact paths in place (it adds its own separate blocks/folders for rock, brick,
+cobblestone, and planks instead, since vanilla itself still uses the plain paths elsewhere) — so an
+archway built next to a Conquest-textured wall renders vanilla stone and visibly clashes.
+
+When Medieval Architecture is installed, this mod redirects the affected texture refs to Conquest's
+equivalent tile, verified across every vanilla rock and wood type. No configuration needed; nothing
+changes if you don't run Medieval Architecture. A few textures MA references need no fix at all —
+Conquest already reskins those exact paths in place (aged brick, debarked wood, daub, generic planks);
+damage overlays have no Conquest equivalent and stay vanilla either way.
 
 ## Terrain Slabs compatibility (connected textures)
 
